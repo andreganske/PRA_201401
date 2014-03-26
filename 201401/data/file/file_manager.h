@@ -17,7 +17,7 @@ void fDataOverWrite(FILE* pFile, pDATA pData, int position);
 void fDataRead(FILE* pFile, pDATA pData);
 void fDataReadPosition(FILE* pFile, pDATA pData, int position);
 void fDataWriteBlock(FILE* pFile, ppDATA ppData, int quanty);
-void fDataReadBlock(FILE* pFile, ppDATA ppData, int quanty);
+void fDataReadBlock(FILE* pFile, ppDATA ppData, int quanty, int position);
 void fileGenericProblemError();
 
 #endif

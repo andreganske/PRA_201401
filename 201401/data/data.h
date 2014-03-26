@@ -30,7 +30,7 @@ typedef enum DataType{
 // Define struct
 typedef struct DATA{
 	unsigned int	id;
-	void*		data;
+	PARTIDA		partida;
 	DataType	type;
 	int		isDeleted;
 }DATA;

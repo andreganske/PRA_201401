@@ -9,7 +9,7 @@ void fDataWrite(FILE* pFile, pDATA pData)
 	}
 	else
 	{
-		fwrite(pData,1,sizeof(DATA),pFile);
+		fwrite(pData,sizeof(DATA),1,pFile);
 	}
 }
 
@@ -34,9 +34,7 @@ void fDataRead(FILE* pFile, pDATA pData)
 	}
 	else
 	{
-		printf("111###\n");
-		fread(pData,1,sizeof(DATA),pFile);
-		printf("222###\n");
+		fread(pData,sizeof(DATA),1,pFile);
 	}
 }
 
@@ -65,11 +63,11 @@ void fDataWriteBlock(FILE* pFile, ppDATA ppData, int quanty)
 	}
 	else
 	{
-		fwrite((*ppData),quanty,sizeof(DATA) * quanty,pFile);
+		fwrite((*ppData),sizeof(DATA) * quanty,1,pFile);
 	}
 }
 
-void fDataReadBlock(FILE* pFile, ppDATA ppData, int quanty)
+void fDataReadBlock(FILE* pFile, ppDATA ppData, int quanty, int position)
 {
 	if(pFile == NULL)
 	{
@@ -77,7 +75,8 @@ void fDataReadBlock(FILE* pFile, ppDATA ppData, int quanty)
 	}
 	else
 	{
-
+		fseek(pFile,position * (sizeof(DATA) * quanty), SEEK_SET);
+		fread((*ppData),sizeof(DATA) * quanty,1,pFile);
 	}
 }
 

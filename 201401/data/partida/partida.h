@@ -24,7 +24,6 @@ typedef struct PARTIDA *pPARTIDA;
 typedef struct PARTIDA **ppPARTIDA;
 
 typedef struct PARTIDA{
-	unsigned int id;
 	char	nameTimeA[150];
 	char	nameTimeB[150];
 	int	score;

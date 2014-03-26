@@ -26,27 +26,29 @@ int main()
 	/* test_randomqtdPayer(); */
 	/* test_randomPlace(); */
 	/* test_DATAWFileInBlock();	 */
-	test_generateDATAInFile();
+	/* test_generateDATAInFile(); */
 	test_DATARFile();
 }
 
 void test_DATARFile()
 {
 
-	ppDATA ppData;
-	ppData = (ppDATA) malloc(sizeof(pDATA));
-	(*ppData) = (pDATA) malloc(sizeof(DATA));
-	(*ppData)->data = (void*) malloc(sizeof(PARTIDA));
+	pDATA pData;
+	pData = (pDATA) malloc(sizeof(DATA));
+	/* (pData)->data = (pPARTIDA) malloc(sizeof(PARTIDA)); */
 
 	FILE** ppFile;
 	ppFile = (FILE**) malloc(sizeof(FILE*));
 
-	test_readDataInFile(ppFile,(*ppData));
-	printEntries((*ppData));
+	DATA testeD;
+	/* testeD.data = (pPARTIDA) malloc(sizeof(PARTIDA)); */
+	/* printEntries((&testeD)); */
+	test_readDataInFile(ppFile,&testeD);
+	printEntries((&testeD));
 
 
-	free((*ppData)->data);
-	free((*ppData));
+	/* free((pData)->data); */
+	free((pData));
 	free(ppFile);
 }
 
@@ -82,7 +84,7 @@ void test_DATAWFileInBlock()
 	for(i=0;i<lenght;i++)
 	{
 		ppData[i] = (pDATA) malloc(sizeof(DATA));
-		ppData[i]->data = (pPARTIDA) malloc(sizeof(PARTIDA));
+		/* ppData[i]->data = (pPARTIDA) malloc(sizeof(PARTIDA)); */
 	}
 
 	ppPartida = (ppPARTIDA) malloc(sizeof(pPARTIDA));
@@ -104,7 +106,7 @@ void test_DATAWFileInBlock()
 			ppData[i]->id = id;
 
 			//copy the random PARTIDA generated before
-			memcpy(ppData[i]->data,(*ppPartida),sizeof(PARTIDA));
+			/* memcpy(&(ppData[i].data),(*ppPartida),sizeof(PARTIDA)); */
 
 			i++;
 			currSizeBlock += sizeof(DATA);
@@ -137,22 +139,21 @@ void test_generateDATAInFile()
 
 	test_randomPartida(ppPartida);
 
-	printf("###id\n");
 	//Generate Data
-	pData->id = 10;
+	pData->id = 20;
 
 	printf("###id %d\n",pData->id);
 	//copy the random PARTIDA generated before
-	pData->data = (pPARTIDA) malloc(sizeof(PARTIDA));
-	memcpy(pData->data,(*ppPartida),sizeof(PARTIDA));
+	/* pData->partida = (pPARTIDA) malloc(sizeof(PARTIDA)); */
+	memcpy(&pData->partida,(*ppPartida),sizeof(PARTIDA));
 
-	openFile(ppFile,"a+b");
+	openFile(ppFile,"wb");
 	fDataWrite((*ppFile),pData);
+	fflush(*ppFile);
 	closeFile(ppFile);
 
 	free((*ppPartida));
 	free((ppPartida));
-	free((pData->data));
 	free((pData));
 	free(ppFile);
 }
