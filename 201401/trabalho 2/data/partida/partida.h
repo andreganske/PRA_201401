@@ -32,4 +32,6 @@ typedef struct PARTIDA{
 	char	place[150];
 }PARTIDA;
 
+
+
 #endif
