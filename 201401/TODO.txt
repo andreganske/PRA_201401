@@ -1,2 +1,4 @@
 contar acesso de leitura e escrita em disco (&int no fwrite/fread)
 fazer voltar na paginacao
+
+testar queue,stack e sort
