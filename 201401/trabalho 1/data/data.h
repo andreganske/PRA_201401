@@ -20,8 +20,8 @@ typedef enum DataType{
  * File path and name
 */
 #define FILEPATH "data_base/"
-#define FILENAME "generatedFile.data"
-#define FULLFILEPATH "data_base/generatedFile.data"
+#define FILENAME "generatedFile.bin"
+#define FULLFILEPATH "data_base/generatedFile.bin"
 
 /**
  * Generic use of struct, it's use a void* (pointer of void)
