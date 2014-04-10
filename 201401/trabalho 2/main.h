@@ -1,7 +1,7 @@
 /**
  * This code is under GNU License Version 3.
  * 
- * Create by Andre Ganske and Weskley Migliorini
+ * Create by Andre Ganske and Wesklei Migliorini
  */
 
 #ifndef _main_h

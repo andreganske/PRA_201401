@@ -1,7 +1,7 @@
 /**
  * This code is under GNU License Version 3.
  * 
- * Create by Andre Ganske, Deivid Sartori and Weskley Migliorini
+ * Create by Andre Ganske, Deivid Sartori and Wesklei Migliorini
  */
 
 // Calling some librarys

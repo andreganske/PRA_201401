@@ -1,7 +1,7 @@
 /**
  * This code is under GNU License Version 3.
  * 
- * Create by Andre Ganske, Deivid Sartori and Weskley Migliorini
+ * Create by Andre Ganske, Deivid Sartori and Wesklei Migliorini
  *
  * How to compile: gcc main.c main.h data/partida/partida.c  data/file/file_manager.c  data/data.c data/partida/random/random_partida.c utils/utils.c
  */
