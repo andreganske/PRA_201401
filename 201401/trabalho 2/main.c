@@ -24,8 +24,13 @@ void menu() {
 	//to use random values
 	srand(time(NULL));
 
-	int menu,submenu, status = 0, position, quantity;
-	int size,blockSize;
+	int menu,submenu, status = 0, position, quantity,subsubmenu;
+	int size,blockSize, k_vias;
+
+	//Function to sort
+	void *cmpFisrt;
+	void *cmpSecond;
+
 	// execution time control
 	clock_t time_start, time_end;
 
@@ -35,8 +40,8 @@ void menu() {
 		printf("\n[1] Read entry in position using block");
 		printf("\n[2] Create and insert one random entry");
 		printf("\n[3] Read entry in position");
-		/* printf("\n[2] Create and insert multiple entries"); */
-		/* printf("\n[3] Find and print one entry"); */
+		printf("\n[4] Sort file");
+		printf("\n[5] Read sorted entries");
 		/* printf("\n[4] Find and print multiple entries"); */
 
 		printf("\n");
@@ -107,12 +112,51 @@ void menu() {
 
 			
 			case 4:
-				/* status = 0; */
-				/* position = getInsertPosition(); */
-				/* quantity = getInsertQuantity(); */
-				/* printEntries(getMultipleEntries(position, quantity), quantity); */
+				printf("What is the block size (Default: 4096)?\n");
+				scanf("%d",&blockSize);
+
+				printf("The amount of 'k-vias' (Default: 8)?\n");
+				scanf("%d",&k_vias);
+
+				printf("\n What is the first key to sort:");
+				printf("\n[0] Name Time A");
+				printf("\n[1] Name Time B");
+				printf("\n[2] Score (Default)");
+				printf("\n[3] Date");
+				printf("\n[4] Place");
+				printf("\n");
+
+				scanf("%d",&submenu);
+
+
+				printf("\n What is the second key to sort (don't choose the same!):");
+				printf("\n[0] Name Time A");
+				printf("\n[1] Name Time B");
+				printf("\n[2] Score");
+				printf("\n[3] Date (Date)");
+				printf("\n[4] Place");
+				printf("\n");
+
+				scanf("%d",&subsubmenu);
+				
+				time_start = time(NULL);	
+				intercalateSort(blockSize,k_vias, submenu, subsubmenu);
+				time_end = time(NULL);
+
+				executionTime(time_start,time_end);
+				status = 1;
 			break;
 
+			case 5:
+				printf("What is the block size?\n");
+				scanf("%d",&blockSize);
+				
+				time_start = time(NULL);	
+				readRandomEntriesBlockSorted(blockSize);
+				time_end = time(NULL);
+
+				executionTime(time_start,time_end);
+			break;
 			default: 
 				status = 1;
 				printf("\nPlease, select a valid option!!!");
@@ -274,7 +318,6 @@ void readRandomEntriesBlock(int blockSize)
 	int ask;
 	int position;
 
-	//* multiply by 2 just to ensure enougth space
 	int lenght = blockSize;
 	ppData = (ppDATA) malloc(sizeof(pDATA) * lenght);
 	for(i=0;i<lenght;i++)
@@ -313,6 +356,105 @@ void readRandomEntriesBlock(int blockSize)
 		
 
 
+
+	for(i=0;i<lenght;i++)
+	{
+		free(ppData[i]);
+		/* ppData[i]->data = (pPARTIDA) malloc(sizeof(PARTIDA)); */
+	}
+	free(ppData);
+	free((*ppPartida));
+	free(ppPartida);
+}
+
+
+void readRandomEntriesBlockSorted(int blockSize)
+{
+	ppPARTIDA ppPartida;
+	
+	FILE** ppFile;
+	FILE** ppFileIndexTable;
+	ppFile = (FILE**) malloc(sizeof(FILE*));
+	ppFileIndexTable = (FILE**) malloc(sizeof(FILE*));
+	ppDATA ppData;
+	int i=0;
+
+	int count = 0;
+	int id = -1;
+	int ask = 0;
+	int position;
+	int k_vias = 8;
+	int lenght = blockSize;
+	ppData = (ppDATA) malloc(sizeof(pDATA) * lenght);
+	for(i=0;i<lenght;i++)
+	{
+		ppData[i] = (pDATA) malloc(sizeof(DATA));
+		/* ppData[i]->data = (pPARTIDA) malloc(sizeof(PARTIDA)); */
+	}
+
+	ppPartida = (ppPARTIDA) malloc(sizeof(pPARTIDA));
+	(*ppPartida) = (pPARTIDA) malloc(sizeof(PARTIDA));
+	
+
+	ppINDEX_TABLE ppIndexTable;
+	ppIndexTable = malloc(sizeof(pINDEX_TABLE) * k_vias);
+	
+	//the block size
+	for(i=0;i<k_vias;i++)
+	{
+		ppIndexTable[i] = malloc(sizeof(INDEX_TABLE));
+	}
+
+
+	openFileIndexTable(ppFileIndexTable,"r+b");
+	/* openFile(ppFile,"r+b"); */
+	printf("Reading the first block ...\n");
+	position = -1;
+	
+
+		while(!feof(*ppFileIndexTable) && ask ==0)
+		{
+			
+			fIndexTableReadBlock((*ppFileIndexTable),ppIndexTable,k_vias, position);
+printf("Block size eh %d divid eh %d \n",blockSize, blockSize/sizeof(INDEX_TABLE));
+		/* for(i=0;i<blockSize/sizeof(INDEX_TABLE);i++) */
+		/* { */
+		
+			for(i=1;i<k_vias;i++)
+			{
+				if(ppIndexTable[i] != NULL)
+				{
+
+					position = ppIndexTable[i]->byteIndex;
+					position = position/sizeof(DATA);
+			printf("#### pos read is %d and i=>%d \n",ppIndexTable[i]->byteIndex,i);
+					readEntryPosition(position);
+				}
+			}
+		
+		/* fDataReadBlock((*ppFile),ppData,blockSize/(sizeof(DATA)), position); */
+		
+		/* i=0; */
+		/* while(i<blockSize/sizeof(DATA)) */
+		/* { */
+			/* memcpy((*ppPartida),ppData[i].partida); */
+		/* 	printEntries(ppData[i]); */
+		/* 	i++; */
+		/* } */
+		/* closeFile(ppFile); */
+
+		printf("What now?\n");
+		printf("[0] Next Block\n");
+		printf("[1] Stop reading ...\n");
+		scanf("%d",&ask);
+
+		position++;
+		}
+	
+		
+
+
+	closeFile(ppFileIndexTable);
 
 	for(i=0;i<lenght;i++)
 	{

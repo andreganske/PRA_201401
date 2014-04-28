@@ -80,6 +80,37 @@ void fDataReadBlock(FILE* pFile, ppDATA ppData, int quanty, int position)
 	}
 }
 
+
+/**
+ * Write in block. This way always append in file
+ */
+void fIndexTableWriteBlock(FILE* pFile, ppINDEX_TABLE ppIndex_Table, int quanty)
+{
+	int i;
+	if(pFile == NULL)
+	{
+		fileGenericProblemError();	
+	}
+	else
+	{
+		fwrite((*ppIndex_Table),sizeof(INDEX_TABLE) * quanty,1,pFile);
+	}
+}
+
+void fIndexTableReadBlock(FILE* pFile, ppINDEX_TABLE ppIndex_Table, int quanty, int position)
+{
+	if(pFile == NULL)
+	{
+		fileGenericProblemError();	
+	}
+	else
+	{
+		fseek(pFile,position * (sizeof(INDEX_TABLE) * quanty), SEEK_SET);
+		fread((*ppIndex_Table),sizeof(INDEX_TABLE) * quanty,1,pFile);
+	}
+}
+
+
 void fileGenericProblemError()
 {
 	perror("\nError operating file!\n");

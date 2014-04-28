@@ -19,5 +19,7 @@ void fDataReadPosition(FILE* pFile, pDATA pData, int position);
 void fDataWriteBlock(FILE* pFile, ppDATA ppData, int quanty);
 void fDataReadBlock(FILE* pFile, ppDATA ppData, int quanty, int position);
 void fileGenericProblemError();
+void fIndexTableWriteBlock(FILE* pFile, ppINDEX_TABLE ppIndex_Table, int quanty);
+void fIndexTableReadBlock(FILE* pFile, ppINDEX_TABLE ppIndex_Table, int quanty, int position);
 
 #endif

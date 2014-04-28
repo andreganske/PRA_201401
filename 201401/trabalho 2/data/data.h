@@ -24,6 +24,12 @@ typedef enum DataType{
 #define FULLFILEPATH "data_base/generatedFile.bin"
 
 /**
+ * File path and name of index 'table sort'
+*/
+#define FILENAME_INDEX_TABLE "indexTableFile.bin"
+#define FULLFILEPATH_INDEX_TABLE "data_base/indexTableFile.bin"
+
+/**
  * Generic use of struct, it's use a void* (pointer of void)
  * and a enum to descripe it's type of DATA
  */
@@ -35,9 +41,15 @@ typedef struct DATA{
 	int		isDeleted;
 }DATA;
 
+typedef struct INDEX_TABLE{
+	unsigned int byteIndex;
+}INDEX_TABLE;
+
 typedef struct DATA *pDATA;
 typedef struct DATA **ppDATA;
 
+typedef struct INDEX_TABLE *pINDEX_TABLE;
+typedef struct INDEX_TABLE **ppINDEX_TABLE;
 /**
  * Defining functions
  */
@@ -48,6 +60,9 @@ void openFile(FILE** ppFile,char* param);
 void closeFile(FILE** ppFile);
 long currentSizeInFile(FILE** ppFile);
 void printEntries(pDATA pData);
+void openFileIndexTable(FILE **ppFile, char* param);
+void readRandomEntriesBlockSorted(int blockSize);
+void intercalateSort(int blockSize, int k_vias, int cmpKey1, int cmpKey2);
 
 /**
  * Set in second parameter a string representative of DataType

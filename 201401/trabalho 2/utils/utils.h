@@ -12,7 +12,8 @@
 #define false 1;
 
 boolean cmpChar(char *first, char *second);
-boolean cmpInt(int *first, int *second);
+boolean cmpInt(int first, int second);
 boolean cmpDate(pDATE first, pDATE second);
+int cmpEncapsulate(void *p1, void *p2, void *typeCmp);
 
 #endif
