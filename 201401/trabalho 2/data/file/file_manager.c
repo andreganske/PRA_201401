@@ -87,6 +87,7 @@ void fDataReadBlock(FILE* pFile, ppDATA ppData, int quanty, int position)
 void fIndexTableWriteBlock(FILE* pFile, ppINDEX_TABLE ppIndex_Table, int quanty)
 {
 	int i;
+
 	if(pFile == NULL)
 	{
 		fileGenericProblemError();	

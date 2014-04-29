@@ -137,12 +137,9 @@ void intercalateSort(int blockSize, int k_vias, int cmpKey1, int cmpKey2)
 		i=0;
 		while(i<blockSize/sizeof(DATA))
 		{
-			printf("mostrando as ids.... %d\n",ppData[i]->id);
-			/* memcpy((*ppPartida),ppData[i].partida); */
 			if(ppData[i] != NULL){
 				*ppStackNew = malloc(sizeof(STACK));
 				/* push(&ppStack[stackIndex],ppStackNew,ppData[i]); */
-		/* printf("elem no stakc eh <<<<<<<<<<<<<<===== %d\n", ppStack[stackIndex]->data == NULL ? 1 : 0); */
 				
 				//FAKE PUSH
 				(*ppStackNew)->next = malloc(sizeof(pSTACK));
@@ -156,7 +153,7 @@ void intercalateSort(int blockSize, int k_vias, int cmpKey1, int cmpKey2)
 			}
 			else
 			{
-				printf("TESTE data.c ppData[i] eh null!\n");
+				/* printf("TESTE data.c ppData[i] eh null!\n"); */
 			}
 		}
 		stackIndex++;
@@ -237,14 +234,12 @@ void intercalateSort(int blockSize, int k_vias, int cmpKey1, int cmpKey2)
 				{
 			for(j=0;j<k_vias;j++)
 			{
-				printf(">>>>>>>>>>>> id %d \n",ppIndexTable[j]->byteIndex);
 			}
-					printf("grava\n");
 					fIndexTableWriteBlock(*ppFile,ppIndexTable,k_vias);
 					i = 0;
 				}
 			}else	
-			printf("foi null e passou do if \n",i,lenght);
+			/* printf("foi null e passou do if \n",i,lenght); */
 
 			iterator = &(*iterator)->next;
 			//repeat

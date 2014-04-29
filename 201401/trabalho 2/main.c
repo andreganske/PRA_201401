@@ -382,7 +382,7 @@ void readRandomEntriesBlockSorted(int blockSize)
 	int count = 0;
 	int id = -1;
 	int ask = 0;
-	int position;
+	int position,posId;
 	int k_vias = 8;
 	int lenght = blockSize;
 	ppData = (ppDATA) malloc(sizeof(pDATA) * lenght);
@@ -409,14 +409,14 @@ void readRandomEntriesBlockSorted(int blockSize)
 	openFileIndexTable(ppFileIndexTable,"r+b");
 	/* openFile(ppFile,"r+b"); */
 	printf("Reading the first block ...\n");
-	position = -1;
+	position = 0;
 	
 
 		while(!feof(*ppFileIndexTable) && ask ==0)
 		{
 			
 			fIndexTableReadBlock((*ppFileIndexTable),ppIndexTable,k_vias, position);
-printf("Block size eh %d divid eh %d \n",blockSize, blockSize/sizeof(INDEX_TABLE));
+			position++;
 		/* for(i=0;i<blockSize/sizeof(INDEX_TABLE);i++) */
 		/* { */
 		
@@ -425,10 +425,9 @@ printf("Block size eh %d divid eh %d \n",blockSize, blockSize/sizeof(INDEX_TABLE
 				if(ppIndexTable[i] != NULL)
 				{
 
-					position = ppIndexTable[i]->byteIndex;
-					position = position/sizeof(DATA);
-			printf("#### pos read is %d and i=>%d \n",ppIndexTable[i]->byteIndex,i);
-					readEntryPosition(position);
+					posId = ppIndexTable[i]->byteIndex;
+					posId = posId/sizeof(DATA);
+					/* readEntryPosition(position); */
 				}
 			}
 		
