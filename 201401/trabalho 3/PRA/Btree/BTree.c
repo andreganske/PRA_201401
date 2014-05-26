@@ -222,84 +222,6 @@ bool isLeaf(arvoreB *leaf) {
         return false;
 }
 
-void removeTree(arvoreB *pTree, int chave) {
-
-    int i, k, pos_interna, pos_sucessor, num_chaves;
-    int qtd_chaves;
-
-    arvoreB *pNo;
-    pNo = busca(pTree, chave);
-
-    //pega pos dentro do no
-    pos_interna = busca_binaria(pNo, chave);
-    //Dois casos principais
-
-    //1-Folha
-    if (isLeaf(pNo)) {
-
-        //      removeLeafItem(pNo, chave, pos_interna);
-
-        //TODO testar se precisa rebalancear
-        if (pNo->num_chaves < MIN_OCUP) {
-
-            //ver qual balanceamento usar:
-
-            //se (Esq U Dir) de pNo tem ate MAX_CHAVES
-            qtd_chaves = pNo->filhos[pos_interna]->num_chaves + pNo->filhos[pos_interna + 1]->num_chaves;
-            if (qtd_chaves <= MAX_CHAVES) { //(1) Concatenar
-
-            } else {//(2)-Redistribuir
-
-            }
-        }
-
-    } else {
-        //2-Interna
-
-        //se vai ficar desbalanceada quando remover
-        if (pNo->num_chaves - 1 < MIN_OCUP) {
-            //acha sucessor, busca a direita
-            pos_sucessor = busca_binaria(pNo->filhos[pos_interna + 1], chave);
-
-            //troca e remove
-            pNo->chaves[pos_interna] = pNo->filhos[pos_interna + 1]->chaves[pos_sucessor];
-
-            //reorganiza as posicoes do sucessor
-            pNo->filhos[pos_interna + 1]->chaves[pos_sucessor] = 0;
-            k = 0;
-
-            num_chaves = pNo->filhos[pos_interna + 1]->num_chaves -= 1; //decrementa o ultimo, depois faz ele zero
-
-            //realiza o remanejamento para manter as chaves ordenadas
-            while (k < num_chaves) {
-
-                pNo->filhos[pos_interna + 1]->chaves[k] = pNo->filhos[pos_interna + 1]->chaves[k + 1];
-                pNo->filhos[pos_interna + 1]->filhos[k] = pNo->filhos[pos_interna + 1]->filhos[k + 1];
-                k++;
-            }
-
-            //zera o ultimo indice, faz isso apenas para tratar
-            pNo->filhos[pos_interna + 1]->filhos[num_chaves] = NULL;
-            pNo->filhos[pos_interna + 1]->chaves[num_chaves] = 0;
-
-            //TODO testar se novo sucessor tem numero minimo ou precisa remanezar
-            if (pNo->filhos[pos_interna + 1]->num_chaves < MIN_OCUP) {
-                //concatenar ou
-                //redistribuir
-
-                //se (Esq U Dir) de pNo tem ate MAX_CHAVES
-                qtd_chaves = pNo->filhos[pos_interna]->num_chaves + pNo->filhos[pos_interna + 1]->num_chaves;
-                if (qtd_chaves <= MAX_CHAVES) { //(1) Concatenar
-
-                } else {//(2)-Redistribuir
-
-                }
-            }
-
-        }
-    }
-}
-
 /**
  * Acha a chave sucessora
  * @param pTree
@@ -781,13 +703,13 @@ void testBTreeInsercaoRemocaoConsulta(void) {
     printf("\n");
 
     printf("\nRemovendo elemento 37\n");
-    removeTree(*raiz, 37);
+   // removeTree(*raiz, 37);
     printf("Mostrando em-ordem...\n");
     em_ordem(*raiz);
     printf("\n");
 
     printf("\nRemovendo elemento 58\n");
-    removeTree(*raiz, 58);
+    //removeTree(*raiz, 58);
     printf("Mostrando em-ordem...\n");
     em_ordem(*raiz);
     printf("\n");
