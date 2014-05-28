@@ -19,6 +19,10 @@
 #include <unistd.h>
 #include <math.h>
 
+/* Include local files */
+#include "DAO/data.h"
+#include "DAO/partida.h"
+
 /*DEFINICOES*/
 #define SUCESSO         1
 #define FRACASSO        0

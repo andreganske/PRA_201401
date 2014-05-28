@@ -7,7 +7,7 @@
 
 #include "BTree.h"
 
-int busca_binaria(arvoreB *no, int info) {
+int busca_binaria(arvoreB *no, pDATE info) {
     int meio, i, f;
     i = 0;
     f = no->num_chaves - 1;
@@ -36,7 +36,7 @@ void em_ordem(arvoreB *raiz) {
     }
 }
 
-arvoreB *busca(arvoreB *raiz, int info) {
+arvoreB *busca(arvoreB *raiz, pDATE info) {
     arvoreB *no;
     int pos; //posição retornada pelo busca binária.
 
@@ -52,7 +52,7 @@ arvoreB *busca(arvoreB *raiz, int info) {
 
 //Insere uma chave e o ponteiro para o filho da direita em um nó
 
-void insere_chave(arvoreB *raiz, int info, arvoreB *filhodir) {
+void insere_chave(arvoreB *raiz, pDATE info, arvoreB *filhodir) {
     int k, pos;
 
     //busca para obter a posição ideal para inserir a nova chave
@@ -80,7 +80,7 @@ void insere_chave(arvoreB *raiz, int info, arvoreB *filhodir) {
  * @param info_retorno
  * @return 
  */
-arvoreB *insere(arvoreB *raiz, int info, bool *h, int *info_retorno) {
+arvoreB *insere(arvoreB *raiz, pDATE info, bool *h, int *info_retorno) {
     int i, j, pos,
             info_mediano; //auxiliar para armazenar a chave que irá subir para o pai
     arvoreB *temp, *filho_dir; //ponteiro para o filho à direita da chave 
@@ -157,7 +157,7 @@ arvoreB *insere(arvoreB *raiz, int info, bool *h, int *info_retorno) {
  * @param info
  * @return 
  */
-arvoreB *insere_arvoreB(arvoreB *raiz, int info) {
+arvoreB *insere_arvoreB(arvoreB *raiz, pDATE info) {
     bool h;
     int info_retorno, i;
     arvoreB *filho_dir, *nova_raiz;
@@ -446,7 +446,7 @@ arvoreB *findSibling(arvoreB *raiz, arvoreB *irmao) {
  * @param pTree
  * @param infoKey
  */
-void removeBTree(arvoreB *pRoot, arvoreB *pNode, int infoKey) {
+void removeBTree(arvoreB *pRoot, arvoreB *pNode, pDATE infoKey) {
 
     int i, k, pos_interna, pos_sucessor;
     int num_chaves, predecingKey, sucessorKey, rootKey;
