@@ -61,6 +61,11 @@ void closeFile(FILE** ppFile);
 long currentSizeInFile(FILE** ppFile);
 void printEntries(pDATA pData);
 void openFileIndexTable(FILE **ppFile, char* param);
+void readRandomEntriesBlockSorted(int blockSize);
+void intercalateSort(int blockSize, int k_vias, int cmpKey1, int cmpKey2);
+
+void creteBTree(arvoreB raiz, int cmpKey1, int cmpKey2);
+void removeFromBTree(int info, int cmpKey1, int cmpKey2);
 
 /**
  * Set in second parameter a string representative of DataType
