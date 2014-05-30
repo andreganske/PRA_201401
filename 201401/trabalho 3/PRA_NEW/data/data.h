@@ -19,15 +19,15 @@ typedef enum DataType{
 /**
  * File path and name
 */
-#define FILEPATH "data_base/"
+#define FILEPATH "./"
 #define FILENAME "generatedFile.bin"
-#define FULLFILEPATH "data_base/generatedFile.bin"
+#define FULLFILEPATH "/tmp/generatedFile.bin"
 
 /**
  * File path and name of index 'table sort'
 */
 #define FILENAME_INDEX_TABLE "indexTableFile.bin"
-#define FULLFILEPATH_INDEX_TABLE "data_base/indexTableFile.bin"
+#define FULLFILEPATH_INDEX_TABLE "/tmp/indexTableFile.bin"
 
 /**
  * Generic use of struct, it's use a void* (pointer of void)

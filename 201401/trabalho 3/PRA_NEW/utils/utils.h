@@ -10,6 +10,6 @@
 int cmpChar(char *first, char *second);
 int cmpInt(int first, int second);
 int cmpDate(pDATE first, pDATE second);
-int cmpEncapsulate(void *p1, void *p2, void *typeCmp);
+int cmpEncapsulate(pDATA p1, pDATA p2, int typeCmp);
 
 #endif

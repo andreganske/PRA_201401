@@ -18,7 +18,7 @@ typedef struct arvoreB arvoreB;
 
 typedef struct arvoreB {
     int num_chaves; //Quantidades de chaves contida no nó
-    int chaves[MAX_CHAVES+1]; //Chaves armazenadas no nó
+    pDATA chaves[MAX_CHAVES+1]; //Chaves armazenadas no nó
     arvoreB *filhos[MAX_FILHOS]; //Ponteiro para os filhos
 } arvoreB;
 

@@ -7,20 +7,21 @@
 
 #include "../main.h"
 
-int busca_binaria(arvoreB *no, int info) {
+int busca_binaria(arvoreB *no, pDATA info) {
     int meio, i, f;
     i = 0;
-        
-    f = no->num_chaves - 1;
 
+    f = no->num_chaves - 1;
     while (i <= f) {
         meio = (i + f) / 2;
-        if (no->chaves[meio] == info)
-            return (meio); //Encontrou. Retorna a posíção em que a chave está.
-        else if (no->chaves[meio] > info) {
+        //if (no->chaves[meio] == info)
+        if (cmpEncapsulate(no->chaves[meio], info, cmpKey1) == 0)
+            return meio; //Encontrou. Retorna a posíção em que a chave está.
+            //else if (no->chaves[meio] > info) {
+        else if (cmpEncapsulate(no->chaves[meio], info, cmpKey1) > 0) {
             f = meio - 1;
 
-        } else i = meio + 1;
+        } else i = meio + 1; //ele eh menor
     }
     return (i); //Não encontrou. Retorna a posição do ponteiro para o filho.
 }
@@ -37,14 +38,14 @@ void em_ordem(arvoreB *raiz) {
     }
 }
 
-arvoreB *busca(arvoreB *raiz, int info) {
+arvoreB *busca(arvoreB *raiz, pDATA info) {
     arvoreB *no;
     int pos; //posição retornada pelo busca binária.
 
     no = raiz;
     while (no != NULL) {
         pos = busca_binaria(no, info);
-        if (pos < no->num_chaves && no->chaves[pos] == info)
+        if (pos < no->num_chaves && (cmpEncapsulate(no->chaves[pos], info, cmpKey1) == 0))
             return no;
         else no = no->filhos[pos];
     }
@@ -53,7 +54,7 @@ arvoreB *busca(arvoreB *raiz, int info) {
 
 //Insere uma chave e o ponteiro para o filho da direita em um nó
 
-void insere_chave(arvoreB *raiz, int info, arvoreB *filhodir) {
+void insere_chave(arvoreB *raiz, pDATA info, arvoreB *filhodir) {
     int k, pos;
 
     //busca para obter a posição ideal para inserir a nova chave
@@ -81,9 +82,9 @@ void insere_chave(arvoreB *raiz, int info, arvoreB *filhodir) {
  * @param info_retorno
  * @return 
  */
-arvoreB *insere(arvoreB *raiz, int info, bool *h, int *info_retorno) {
-    int i, j, pos,
-            info_mediano; //auxiliar para armazenar a chave que irá subir para o pai
+arvoreB *insere(arvoreB *raiz, pDATA info, bool *h, pDATA *info_retorno) {
+    int i, j, pos;
+    pDATA info_mediano; //auxiliar para armazenar a chave que irá subir para o pai
     arvoreB *temp, *filho_dir; //ponteiro para o filho à direita da chave 
 
     if (raiz == NULL) {
@@ -158,9 +159,10 @@ arvoreB *insere(arvoreB *raiz, int info, bool *h, int *info_retorno) {
  * @param info
  * @return 
  */
-arvoreB *insere_arvoreB(arvoreB *raiz, int info) {
+arvoreB *insere_arvoreB(arvoreB *raiz, pDATA info) {
     bool h;
-    int info_retorno, i;
+    pDATA info_retorno;
+    int i;
     arvoreB *filho_dir, *nova_raiz;
 
     filho_dir = insere(raiz, info, &h, &info_retorno);
@@ -223,14 +225,13 @@ bool isLeaf(arvoreB *leaf) {
         return false;
 }
 
-
 /**
  * Acha a chave sucessora
  * @param pTree
  * @param chave
  * @return 
  */
-int sucessorKeyInNode(arvoreB *pTree, int chave) {
+pDATA sucessorKeyInNode(arvoreB *pTree, pDATA chave) {
 
     arvoreB *pNo;
     pNo = busca(pTree, chave);
@@ -242,7 +243,7 @@ int sucessorKeyInNode(arvoreB *pTree, int chave) {
         int pos_sucessor = busca_binaria(pNo->filhos[pos_interna + 1], chave);
         return pNo->filhos[pos_sucessor]->chaves[0];
     } else {
-        return -1;
+        return NULL;
     }
 }
 
@@ -252,7 +253,7 @@ int sucessorKeyInNode(arvoreB *pTree, int chave) {
  * @param chave
  * @return 
  */
-arvoreB *sucessorChild(arvoreB *pTree, int chave) {
+arvoreB *sucessorChild(arvoreB *pTree, pDATA chave) {
 
     if (pTree == NULL)
         return NULL;
@@ -277,7 +278,7 @@ arvoreB *sucessorChild(arvoreB *pTree, int chave) {
  * @param chave
  * @return 
  */
-int precedecinfKey(arvoreB *pTree, int chave) {
+pDATA precedecinfKey(arvoreB *pTree, pDATA chave) {
 
     arvoreB *pNo;
     pNo = busca(pTree, chave);
@@ -288,7 +289,7 @@ int precedecinfKey(arvoreB *pTree, int chave) {
         int pos_predecessor = busca_binaria(pNo->filhos[pos_interna - 1], chave);
         return pNo->filhos[pos_predecessor]->chaves[pNo->filhos[pos_predecessor]->num_chaves];
     } else {
-        return -1;
+        return NULL;
     }
 }
 
@@ -298,7 +299,7 @@ int precedecinfKey(arvoreB *pTree, int chave) {
  * @param chave
  * @return 
  */
-arvoreB *predecindChild(arvoreB *pTree, int chave) {
+arvoreB *predecindChild(arvoreB *pTree, pDATA chave) {
 
     if (pTree == NULL)
         return NULL;
@@ -308,13 +309,13 @@ arvoreB *predecindChild(arvoreB *pTree, int chave) {
 
     //acha predecessor, pos a esquerda
     int pos_interna = busca_binaria(pNo, chave);
-    if (pos_interna > 0 && pNo->filhos[pos_interna - 1] != NULL ) {
+    if (pos_interna > 0 && pNo->filhos[pos_interna - 1] != NULL) {
         int pos_predecessor = busca_binaria(pNo->filhos[pos_interna - 1], chave);
         return pNo->filhos[pos_predecessor];
-    } else if(pos_interna > 0 && pNo->filhos[pos_interna + 1] != NULL){
+    } else if (pos_interna > 0 && pNo->filhos[pos_interna + 1] != NULL) {
         int pos_predecessor = busca_binaria(pNo->filhos[pos_interna - 1], chave);
         return pNo->filhos[pos_predecessor];
-    }else{
+    } else {
         return NULL;
     }
 }
@@ -325,12 +326,12 @@ arvoreB *predecindChild(arvoreB *pTree, int chave) {
  * @param node1
  * @param node2
  */
-void moveKey(int infoKey, arvoreB *node1, arvoreB *node2) {
+void moveKey(pDATA infoKey, arvoreB *node1, arvoreB *node2) {
 
     int pos;
 
     pos = busca_binaria(node1, infoKey);
-    
+
     //insere no node2
     insere_chave(node2, infoKey, node1->filhos[pos + 1]);
 
@@ -372,7 +373,7 @@ void mergeNodes(arvoreB *origem, arvoreB *destino) {
  * @param key
  * @return 
  */
-arvoreB *rootOfNodeByKey(arvoreB *raiz, int key) {
+arvoreB *rootOfNodeByKey(arvoreB *raiz, pDATA key) {
     arvoreB *no, *predecessor;
     int pos; //posição retornada pelo busca binária.
 
@@ -397,7 +398,7 @@ arvoreB *rootOfNodeByKey(arvoreB *raiz, int key) {
  * @param key
  * @return 
  */
-int rootKeyOfNode(arvoreB *raiz, int key) {
+pDATA rootKeyOfNode(arvoreB *raiz, pDATA key) {
 
     arvoreB *predecessor;
     int pos; //posição retornada pelo busca binária.
@@ -405,7 +406,7 @@ int rootKeyOfNode(arvoreB *raiz, int key) {
     predecessor = rootOfNodeByKey(raiz, key);
     pos = busca_binaria(predecessor, key);
 
-    return pos;
+    return predecessor->chaves[pos];
 }
 
 /**
@@ -417,7 +418,7 @@ int rootKeyOfNode(arvoreB *raiz, int key) {
 arvoreB *findSibling(arvoreB *raiz, arvoreB *irmao) {
     arvoreB *no, *predecessor;
     int pos; //posição retornada pelo busca binária.
-    int key;
+    pDATA key;
 
     //usa alguma chave para buscar
     key = irmao->chaves[0];
@@ -426,7 +427,7 @@ arvoreB *findSibling(arvoreB *raiz, arvoreB *irmao) {
     predecessor = raiz;
     while (no != NULL) {
         pos = busca_binaria(no, key);
-        if (pos < no->num_chaves && no->chaves[pos] == key) {
+        if (pos < no->num_chaves && cmpEncapsulate(no->chaves[pos],key,cmpKey1) == 0) {
             break;
         } else {
             predecessor = no;
@@ -451,10 +452,11 @@ arvoreB *findSibling(arvoreB *raiz, arvoreB *irmao) {
  * @param pTree
  * @param infoKey
  */
-void removeBTree(arvoreB *pRoot, arvoreB *pNode, int infoKey) {
+void removeBTree(arvoreB *pRoot, arvoreB *pNode, pDATA infoKey) {
 
     int i, k, pos_interna, pos_sucessor;
-    int num_chaves, predecingKey, sucessorKey, rootKey;
+    int num_chaves;
+    pDATA predecingKey, sucessorKey, rootKey;
 
     arvoreB *pPreceding, *pSuccessor, *pRootNode, *pRootRootNode;
     arvoreB *pIrmao;
@@ -477,7 +479,7 @@ void removeBTree(arvoreB *pRoot, arvoreB *pNode, int infoKey) {
             num_chaves = pPreceding->num_chaves;
 
             //move chave do predecessor para pNode
-            moveKey(pPreceding->chaves[num_chaves-1], pPreceding, pNode);
+            moveKey(pPreceding->chaves[num_chaves - 1], pPreceding, pNode);
 
             //move infoket do pNode para o sucessor
             moveKey(infoKey, pNode, pSuccessor);
@@ -580,7 +582,7 @@ void removeBTree(arvoreB *pRoot, arvoreB *pNode, int infoKey) {
 }
 
 void testBTreeInsercaoConsulta(void) {
-
+/*
     arvoreB **raiz;
 
     int i, j;
@@ -616,7 +618,7 @@ void testBTreeInsercaoConsulta(void) {
     printf("\n");
 
 
-    /*arvoreB raiz;
+    arvoreB raiz;
 
     int i = 0;
 
@@ -671,7 +673,7 @@ void testBTreeInsercaoConsulta(void) {
 
 void testBTreeInsercaoRemocaoConsulta(void) {
 
-    arvoreB **raiz;
+  /*  arvoreB **raiz;
 
     int i, j;
     raiz = malloc(sizeof (arvoreB*));
@@ -710,8 +712,8 @@ void testBTreeInsercaoRemocaoConsulta(void) {
     printf("\nRemovendo elemento 37\n");
     arvoreB *node;
     node = busca(*raiz, 37);
-    
-    removeBTree((*raiz),node, 37);
+
+    removeBTree((*raiz), node, 37);
     printf("Mostrando em-ordem...\n");
     em_ordem(*raiz);
     printf("\n");
@@ -720,7 +722,7 @@ void testBTreeInsercaoRemocaoConsulta(void) {
     //removeBTree(*raiz,*raiz, 58);
     printf("Mostrando em-ordem...\n");
     em_ordem(*raiz);
-    printf("\n");
+    printf("\n");*/
 }
 
 void testIsLeaf() {
@@ -736,7 +738,7 @@ void testIsLeaf() {
     }
 
     printf("Inserindo elementos do slide ED2_03_Arvore_B.pdf (pg 36) ...\n");
-    *raiz = insere_arvoreB(*raiz, 85);
+ /*   *raiz = insere_arvoreB(*raiz, 85);
     *raiz = insere_arvoreB(*raiz, 60);
     *raiz = insere_arvoreB(*raiz, 52);
     *raiz = insere_arvoreB(*raiz, 70);
@@ -775,11 +777,11 @@ void testIsLeaf() {
         printf("37 eh Leaf\n");
     } else {
         printf("37 nao eh Leaf\n");
-    }
+    }*/
 }
 
 void testBTreeAll(void) {
-   // printf("testBTreeInsercaoConsulta()\n");
+    // printf("testBTreeInsercaoConsulta()\n");
     //testBTreeInsercaoConsulta();
     //printf("testIsLeaf()\n");
     //testIsLeaf();

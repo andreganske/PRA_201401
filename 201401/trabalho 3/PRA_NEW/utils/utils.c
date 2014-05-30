@@ -91,7 +91,7 @@ int cmpDate(pDATE first, pDATE second)
  * 		3	Int
  * 		2	Date
  **/
-int cmpEncapsulate(void *p1, void *p2, void *typeCmp)
+int cmpEncapsulate(pDATA p1, pDATA p2, int typeCmp)
 {
 	DATE date1;
 	DATE date2;
@@ -102,7 +102,7 @@ int cmpEncapsulate(void *p1, void *p2, void *typeCmp)
 	{
 		pDATA data1 = (pDATA) p1;
 		pDATA data2 = (pDATA) p2;
-		int type = *(int*) typeCmp;
+		int type = typeCmp;
 
 		switch (type){
 			case 0:

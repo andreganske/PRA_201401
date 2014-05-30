@@ -7,6 +7,11 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 
+//Usado para encapsular a funcao cmpEncapsulate pela BTree
+int cmpKey1;
+int cmpKey2;
+void *cmp;
+
 /*INCLUDES*/
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,10 +47,10 @@
 #define LIMPA "clear || cls"
 
 
-void insere_chave(arvoreB *raiz, int info, arvoreB *filhodir);
-arvoreB *insere(arvoreB *raiz, int info, bool *h, int *info_retorno);
-arvoreB *insere_arvoreB(arvoreB *raiz, int info);
-int busca_binaria(arvoreB *no, int info);
+void insere_chave(arvoreB *raiz, pDATA info, arvoreB *filhodir);
+arvoreB *insere(arvoreB *raiz, pDATA info, bool *h, pDATA *info_retorno);
+arvoreB *insere_arvoreB(arvoreB *raiz, pDATA info);
+int busca_binaria(arvoreB *no, pDATA info);
 void em_ordem(arvoreB *raiz);
 
 

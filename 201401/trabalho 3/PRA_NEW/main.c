@@ -14,11 +14,13 @@ void generateOneEntry();
 void menu();
 
 void main(void) {
+    //precisa inicializar no main!
+    cmp = &cmpEncapsulate;
 
     printf("\nWelcome!");
     printf("\nWhat you want to do?");
     //testBTreeAll();
-     menu();
+    menu();
 }
 
 void menu() {
@@ -87,17 +89,19 @@ void menu() {
 
                 // create BTree
                 //               creteBTree(raiz, cmpKey1, cmpKey2);
-
+                cmpKey1 = submenu;
+                cmpKey2 = subsubmenu;
                 time_end = time(NULL);
                 executionTime(time_start, time_end);
 
                 ok = 0;
                 do {
                     // outro menu
-                    printf("\n[1] Read sorted enties");
+                    printf("\n[1] Generate index table");
                     printf("\n[2] Add entry");
                     printf("\n[3] Remove entry");
                     printf("\n[4] Refresh index");
+                    printf("\n[5] Lista data by index table");
                     printf("\n[0] Exit");
                     printf("\n");
                     scanf("%d", &menu);
@@ -105,7 +109,9 @@ void menu() {
                     switch (menu) {
                         case 1:
                             time_start = time(NULL);
-                            // read entries from tree
+                            
+                            // read entries to tree           
+                            readIndex(&raiz,blockSize);
                             time_end = time(NULL);
                             executionTime(time_start, time_end);
                             break;
@@ -379,6 +385,92 @@ void readRandomEntriesBlock(int blockSize) {
     free(ppPartida);
 }
 
+void readRandomEntriesBlockSorted(int blockSize) {
+    ppPARTIDA ppPartida;
+
+    FILE** ppFile;
+    FILE** ppFileIndexTable;
+    ppFile = (FILE**) malloc(sizeof (FILE*));
+    ppFileIndexTable = (FILE**) malloc(sizeof (FILE*));
+    ppDATA ppData;
+    int i = 0;
+
+    int count = 0;
+    int id = -1;
+    int ask = 0;
+    int position, posId;
+    //int k_vias = 8;
+    int lenght = blockSize;
+    ppData = (ppDATA) malloc(sizeof (pDATA) * lenght);
+    for (i = 0; i < lenght; i++) {
+        ppData[i] = (pDATA) malloc(sizeof (DATA));
+        /* ppData[i]->data = (pPARTIDA) malloc(sizeof(PARTIDA)); */
+    }
+
+    ppPartida = (ppPARTIDA) malloc(sizeof (pPARTIDA));
+    (*ppPartida) = (pPARTIDA) malloc(sizeof (PARTIDA));
+
+
+    ppINDEX_TABLE ppIndexTable;
+    ppIndexTable = malloc(sizeof (pINDEX_TABLE) * blockSize);
+
+    //the block size
+    for (i = 0; i < blockSize; i++) {
+        ppIndexTable[i] = malloc(sizeof (INDEX_TABLE));
+    }
+
+
+    openFileIndexTable(ppFileIndexTable, "r+b");
+    /* openFile(ppFile,"r+b"); */
+    printf("Reading the first block ...\n");
+    position = 0;
+
+
+    while (!feof(*ppFileIndexTable) && ask == 0) {
+
+        fIndexTableReadBlock((*ppFileIndexTable), ppIndexTable, blockSize, position);
+        position++;
+        /* for(i=0;i<blockSize/sizeof(INDEX_TABLE);i++) */
+        /* { */
+
+        for (i = 1; i < blockSize; i++) {
+            if (ppIndexTable[i] != NULL) {
+
+                posId = ppIndexTable[i]->byteIndex;
+                posId = posId / sizeof (DATA);
+                readEntryPosition(position);
+            }
+        }
+
+        /* fDataReadBlock((*ppFile),ppData,blockSize/(sizeof(DATA)), position); */
+
+        /* i=0; */
+        /* while(i<blockSize/sizeof(DATA)) */
+        /* { */
+        /* memcpy((*ppPartida),ppData[i].partida); */
+        /* 	printEntries(ppData[i]); */
+        /* 	i++; */
+        /* } */
+        /* closeFile(ppFile); */
+
+        printf("What now?\n");
+        printf("[0] Next Block\n");
+        printf("[1] Stop reading ...\n");
+        scanf("%d", &ask);
+
+        position++;
+    }
 
 
 
+
+    closeFile(ppFileIndexTable);
+
+    for (i = 0; i < lenght; i++) {
+        free(ppData[i]);
+        /* ppData[i]->data = (pPARTIDA) malloc(sizeof(PARTIDA)); */
+    }
+    free(ppData);
+    free((*ppPartida));
+    free(ppPartida);
+}
