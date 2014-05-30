@@ -7,6 +7,41 @@
 
 #include "../main.h"
 
+void createBTree(arvoreB **raiz, int blockSize) {
+    int position, i;
+    FILE *pFileData;
+
+    /* //this way will try on-be-one, Using block is more fast */
+    /* //iterate untill it is finished */
+
+    ppDATA ppData;
+    ppData = malloc(sizeof (pDATA));
+    ppData = (ppDATA) malloc(sizeof (pDATA) * blockSize);
+    for (i = 0; i < blockSize; i++) {
+        ppData[i] = (pDATA) malloc(sizeof (DATA));
+        /* ppData[i]->data = (pPARTIDA) malloc(sizeof(PARTIDA)); */
+    }
+
+    pFileData = malloc(sizeof (FILE));
+    openFile(&pFileData, "rb");
+    position = -1;
+    if (raiz) {
+        //for(i=0;i<blockSize;i++){
+
+        while (!feof(pFileData)) {
+            position++;
+            fDataReadBlock((pFileData), ppData, blockSize / (sizeof (DATA)), position);
+
+            for (i = 0; i < blockSize; i++) {
+
+                *raiz = insere_arvoreB(*raiz, ppData[i]);
+            }
+        }
+        //}
+    }
+    closeFile(&pFileData);
+}
+
 int busca_binaria(arvoreB *no, pDATA info) {
     int meio, i, f;
     i = 0;
@@ -30,11 +65,37 @@ void em_ordem(arvoreB *raiz) {
     int i;
     if (raiz != NULL) {
         for (i = 0; i < raiz->num_chaves; i++) {
+
             em_ordem(raiz->filhos[i]);
 
-            printf(" %d", raiz->chaves[i]);
+            //printf(" %d", raiz->chaves[i]);
+            printEntries(raiz->chaves[i]);
         }
         em_ordem(raiz->filhos[i]);
+    }
+}
+
+void em_ordem_paginado(arvoreB *raiz, int *pos_atual, int *inicio, int *limit) {
+    int i;
+    if (raiz != NULL && *limit >= 0) {
+
+
+        for (i = 0; i < raiz->num_chaves; i++) {
+
+            em_ordem_paginado(raiz->filhos[i], pos_atual, inicio, limit);
+
+            //printf(" %d", raiz->chaves[i]);
+            if (raiz->chaves[i] != NULL && raiz->chaves[i]->id != 0) {//mostra so quando chegou no ponto que quer
+                
+                if(*pos_atual >= *inicio)
+                    printEntries(raiz->chaves[i]);
+                    *limit -= 1;
+                    *pos_atual += 1;
+            }else{
+                *pos_atual += 1;
+            }
+        }
+        em_ordem_paginado(raiz->filhos[i], pos_atual, inicio, limit);
     }
 }
 
@@ -47,6 +108,7 @@ arvoreB *busca(arvoreB *raiz, pDATA info) {
         pos = busca_binaria(no, info);
         if (pos < no->num_chaves && (cmpEncapsulate(no->chaves[pos], info, cmpKey1) == 0))
             return no;
+
         else no = no->filhos[pos];
     }
     return no;
@@ -95,7 +157,7 @@ arvoreB *insere(arvoreB *raiz, pDATA info, bool *h, pDATA *info_retorno) {
     } else {
         pos = busca_binaria(raiz, info);
         if (raiz->num_chaves > pos && raiz->chaves[pos] == info) {
-            printf("Chave já contida na Árvore");
+            //printf("Chave já contida na Árvore");
             *h = false;
         } else {
             //desce na árvore até encontrar o nó folha para inserir a chave.
@@ -188,6 +250,7 @@ void removeLeafItem(arvoreB *leaf, int pos) {
     int i;
 
     for (i = pos; i < leaf->num_chaves; i++) {
+
         leaf->chaves[i] = leaf->chaves[i + 1];
         leaf->filhos[i] = leaf->filhos[i + 1];
     }
@@ -210,6 +273,7 @@ void rotate(arvoreB *ptrRef, int pos, int bEsq) {
         insere_chave(ptrRef, ptrRef->filhos[pos]->chaves[size], ptrRef->filhos[pos]->filhos[size + 1]);
         removeLeafItem(ptrRef->filhos[pos], size);
     } else {
+
         insere_chave(ptrRef->filhos[pos - 1], ptrRef->chaves[pos], NULL);
         int size = 0;
         insere_chave(ptrRef, ptrRef->filhos[pos]->chaves[size], ptrRef->filhos[pos]->filhos[size - 1]);
@@ -221,6 +285,7 @@ bool isLeaf(arvoreB *leaf) {
 
     if (leaf != NULL)
         return leaf->filhos[0] == NULL; //testa so no indice 0, nao precisa o resto
+
     else
         return false;
 }
@@ -243,6 +308,7 @@ pDATA sucessorKeyInNode(arvoreB *pTree, pDATA chave) {
         int pos_sucessor = busca_binaria(pNo->filhos[pos_interna + 1], chave);
         return pNo->filhos[pos_sucessor]->chaves[0];
     } else {
+
         return NULL;
     }
 }
@@ -258,7 +324,7 @@ arvoreB *sucessorChild(arvoreB *pTree, pDATA chave) {
     if (pTree == NULL)
         return NULL;
 
-    arvoreB *pNo;
+    arvoreB * pNo;
     pNo = busca(pTree, chave);
 
     //acha sucessor,pos a direita
@@ -268,6 +334,7 @@ arvoreB *sucessorChild(arvoreB *pTree, pDATA chave) {
         int pos_sucessor = busca_binaria(pNo->filhos[pos_interna + 1], chave);
         return pNo->filhos[pos_sucessor];
     } else {
+
         return NULL;
     }
 }
@@ -289,6 +356,7 @@ pDATA precedecinfKey(arvoreB *pTree, pDATA chave) {
         int pos_predecessor = busca_binaria(pNo->filhos[pos_interna - 1], chave);
         return pNo->filhos[pos_predecessor]->chaves[pNo->filhos[pos_predecessor]->num_chaves];
     } else {
+
         return NULL;
     }
 }
@@ -304,7 +372,7 @@ arvoreB *predecindChild(arvoreB *pTree, pDATA chave) {
     if (pTree == NULL)
         return NULL;
 
-    arvoreB *pNo;
+    arvoreB * pNo;
     pNo = busca(pTree, chave);
 
     //acha predecessor, pos a esquerda
@@ -316,6 +384,7 @@ arvoreB *predecindChild(arvoreB *pTree, pDATA chave) {
         int pos_predecessor = busca_binaria(pNo->filhos[pos_interna - 1], chave);
         return pNo->filhos[pos_predecessor];
     } else {
+
         return NULL;
     }
 }
@@ -341,6 +410,7 @@ void moveKey(pDATA infoKey, arvoreB *node1, arvoreB *node2) {
     //realiza o remanejamento para manter as chaves ordenadas
     int k = pos;
     while (k < node1->num_chaves) {
+
         node1->chaves[k] = node1->chaves[k + 1];
         node1->filhos[k] = node1->filhos[k + 2];
         k++;
@@ -358,6 +428,7 @@ void mergeNodes(arvoreB *origem, arvoreB *destino) {
     int i, total;
     total = destino->num_chaves + origem->num_chaves;
     for (i = 0; i < total; i++) {
+
         insere_chave(destino, origem->chaves[i], origem->filhos[i + 1]);
         origem->chaves[i] = 0;
         origem->filhos[i + 1] = NULL;
@@ -384,6 +455,7 @@ arvoreB *rootOfNodeByKey(arvoreB *raiz, pDATA key) {
         if (pos < no->num_chaves && no->chaves[pos] == key) {
             return predecessor;
         } else {
+
             predecessor = no;
             no = no->filhos[pos];
         }
@@ -427,7 +499,7 @@ arvoreB *findSibling(arvoreB *raiz, arvoreB *irmao) {
     predecessor = raiz;
     while (no != NULL) {
         pos = busca_binaria(no, key);
-        if (pos < no->num_chaves && cmpEncapsulate(no->chaves[pos],key,cmpKey1) == 0) {
+        if (pos < no->num_chaves && cmpEncapsulate(no->chaves[pos], key, cmpKey1) == 0) {
             break;
         } else {
             predecessor = no;
@@ -442,6 +514,7 @@ arvoreB *findSibling(arvoreB *raiz, arvoreB *irmao) {
     if (pos == 0) {
         return predecessor->filhos[pos + 1];
     } else {
+
         return predecessor->filhos[0];
     }
 }
@@ -571,6 +644,7 @@ void removeBTree(arvoreB *pRoot, arvoreB *pNode, pDATA infoKey) {
             } else {
 
                 //move para do root para o node
+
                 moveKey(rootKey, pRootNode, pNode);
 
                 //chamada recursiva para continuar a remocao
@@ -582,147 +656,147 @@ void removeBTree(arvoreB *pRoot, arvoreB *pNode, pDATA infoKey) {
 }
 
 void testBTreeInsercaoConsulta(void) {
-/*
-    arvoreB **raiz;
+    /*
+        arvoreB **raiz;
 
-    int i, j;
-    raiz = malloc(sizeof (arvoreB*));
-    *raiz = malloc(sizeof (arvoreB));
-    if (*raiz) {
-        printf("Arvore criada com sucesso!\n");
-    } else {
-        printf("Problema ao alocar arvore!\n");
-    }
+        int i, j;
+        raiz = malloc(sizeof (arvoreB*));
+     *raiz = malloc(sizeof (arvoreB));
+        if (*raiz) {
+            printf("Arvore criada com sucesso!\n");
+        } else {
+            printf("Problema ao alocar arvore!\n");
+        }
 
-    printf("Inserindo elementos do slide (pg 163) ...\n");
-    *raiz = insere_arvoreB(*raiz, 100);
-    *raiz = insere_arvoreB(*raiz, 10);
-    *raiz = insere_arvoreB(*raiz, 83);
-    *raiz = insere_arvoreB(*raiz, 18);
-    *raiz = insere_arvoreB(*raiz, 90);
-    *raiz = insere_arvoreB(*raiz, 1);
-    *raiz = insere_arvoreB(*raiz, 5);
-    *raiz = insere_arvoreB(*raiz, 29);
-    *raiz = insere_arvoreB(*raiz, 95);
-    *raiz = insere_arvoreB(*raiz, 42);
-    *raiz = insere_arvoreB(*raiz, 139);
-    *raiz = insere_arvoreB(*raiz, 35);
-    *raiz = insere_arvoreB(*raiz, 116);
-    *raiz = insere_arvoreB(*raiz, 34);
-    *raiz = insere_arvoreB(*raiz, 38);
-    *raiz = insere_arvoreB(*raiz, 50);
-    *raiz = insere_arvoreB(*raiz, 60);
+        printf("Inserindo elementos do slide (pg 163) ...\n");
+     *raiz = insere_arvoreB(*raiz, 100);
+     *raiz = insere_arvoreB(*raiz, 10);
+     *raiz = insere_arvoreB(*raiz, 83);
+     *raiz = insere_arvoreB(*raiz, 18);
+     *raiz = insere_arvoreB(*raiz, 90);
+     *raiz = insere_arvoreB(*raiz, 1);
+     *raiz = insere_arvoreB(*raiz, 5);
+     *raiz = insere_arvoreB(*raiz, 29);
+     *raiz = insere_arvoreB(*raiz, 95);
+     *raiz = insere_arvoreB(*raiz, 42);
+     *raiz = insere_arvoreB(*raiz, 139);
+     *raiz = insere_arvoreB(*raiz, 35);
+     *raiz = insere_arvoreB(*raiz, 116);
+     *raiz = insere_arvoreB(*raiz, 34);
+     *raiz = insere_arvoreB(*raiz, 38);
+     *raiz = insere_arvoreB(*raiz, 50);
+     *raiz = insere_arvoreB(*raiz, 60);
 
-    printf("Mostrando em-ordem...\n");
-    em_ordem(*raiz);
-    printf("\n");
-
-
-    arvoreB raiz;
-
-    int i = 0;
-
-    raiz.chaves[MAX_CHAVES];
-    raiz.num_chaves = 0;
-
-    printf("\n testando a remocao na pagina");
+        printf("Mostrando em-ordem...\n");
+        em_ordem(*raiz);
+        printf("\n");
 
 
+        arvoreB raiz;
 
-    while (i <= 3) {
-        raiz.chaves[i] = 29 + i;
-        raiz.num_chaves += 1;
-        i++;
-    }
+        int i = 0;
 
-    for (i = 0; i < raiz.num_chaves; i++) {
-        printf("%d ", raiz.chaves[i]);
-    }
-    printf("\n");
-    removeLeafItem(&raiz, 30);
+        raiz.chaves[MAX_CHAVES];
+        raiz.num_chaves = 0;
 
-    for (i = 0; i < raiz.num_chaves; i++) {
-        printf("%d ", raiz.chaves[i]);
-    }
+        printf("\n testando a remocao na pagina");
 
-    printf("\n testando os rotates!");
 
-    arvoreB raiz2, raiz3;
 
-    raiz.filhos[0] = raiz2;
-    raiz.filhos[1] = raiz3;
+        while (i <= 3) {
+            raiz.chaves[i] = 29 + i;
+            raiz.num_chaves += 1;
+            i++;
+        }
 
-    i = 0;
+        for (i = 0; i < raiz.num_chaves; i++) {
+            printf("%d ", raiz.chaves[i]);
+        }
+        printf("\n");
+        removeLeafItem(&raiz, 30);
 
-    while (i <= 3) {
-        raiz.chaves[i] = 19 + i;
-        raiz.num_chaves += 1;
-        i++;
-    }
+        for (i = 0; i < raiz.num_chaves; i++) {
+            printf("%d ", raiz.chaves[i]);
+        }
 
-    i = 0;
+        printf("\n testando os rotates!");
 
-    while (i <= 3) {
-        raiz.chaves[i] = 19 + i;
-        raiz.num_chaves += 1;
-        i++;
-    }
+        arvoreB raiz2, raiz3;
+
+        raiz.filhos[0] = raiz2;
+        raiz.filhos[1] = raiz3;
+
+        i = 0;
+
+        while (i <= 3) {
+            raiz.chaves[i] = 19 + i;
+            raiz.num_chaves += 1;
+            i++;
+        }
+
+        i = 0;
+
+        while (i <= 3) {
+            raiz.chaves[i] = 19 + i;
+            raiz.num_chaves += 1;
+            i++;
+        }
 
      */
 }
 
 void testBTreeInsercaoRemocaoConsulta(void) {
 
-  /*  arvoreB **raiz;
+    /*  arvoreB **raiz;
 
-    int i, j;
-    raiz = malloc(sizeof (arvoreB*));
-    *raiz = malloc(sizeof (arvoreB));
-    if (*raiz) {
-        printf("Arvore criada com sucesso!\n");
-    } else {
-        printf("Problema ao alocar arvore!\n");
-    }
+      int i, j;
+      raiz = malloc(sizeof (arvoreB*));
+     *raiz = malloc(sizeof (arvoreB));
+      if (*raiz) {
+          printf("Arvore criada com sucesso!\n");
+      } else {
+          printf("Problema ao alocar arvore!\n");
+      }
 
-    printf("Inserindo elementos do slide ED2_03_Arvore_B.pdf (pg 36) ...\n");
-    *raiz = insere_arvoreB(*raiz, 85);
-    *raiz = insere_arvoreB(*raiz, 60);
-    *raiz = insere_arvoreB(*raiz, 52);
-    *raiz = insere_arvoreB(*raiz, 70);
-    *raiz = insere_arvoreB(*raiz, 58);
-    *raiz = insere_arvoreB(*raiz, 37);
-    *raiz = insere_arvoreB(*raiz, 111);
-    *raiz = insere_arvoreB(*raiz, 23);
-    *raiz = insere_arvoreB(*raiz, 205);
-    *raiz = insere_arvoreB(*raiz, 5);
-    *raiz = insere_arvoreB(*raiz, 97);
-    *raiz = insere_arvoreB(*raiz, 64);
-    *raiz = insere_arvoreB(*raiz, 14);
-    *raiz = insere_arvoreB(*raiz, 90);
-    *raiz = insere_arvoreB(*raiz, 30);
-    *raiz = insere_arvoreB(*raiz, 75);
-    *raiz = insere_arvoreB(*raiz, 25);
-    *raiz = insere_arvoreB(*raiz, 54);
-    *raiz = insere_arvoreB(*raiz, 56);
+      printf("Inserindo elementos do slide ED2_03_Arvore_B.pdf (pg 36) ...\n");
+     *raiz = insere_arvoreB(*raiz, 85);
+     *raiz = insere_arvoreB(*raiz, 60);
+     *raiz = insere_arvoreB(*raiz, 52);
+     *raiz = insere_arvoreB(*raiz, 70);
+     *raiz = insere_arvoreB(*raiz, 58);
+     *raiz = insere_arvoreB(*raiz, 37);
+     *raiz = insere_arvoreB(*raiz, 111);
+     *raiz = insere_arvoreB(*raiz, 23);
+     *raiz = insere_arvoreB(*raiz, 205);
+     *raiz = insere_arvoreB(*raiz, 5);
+     *raiz = insere_arvoreB(*raiz, 97);
+     *raiz = insere_arvoreB(*raiz, 64);
+     *raiz = insere_arvoreB(*raiz, 14);
+     *raiz = insere_arvoreB(*raiz, 90);
+     *raiz = insere_arvoreB(*raiz, 30);
+     *raiz = insere_arvoreB(*raiz, 75);
+     *raiz = insere_arvoreB(*raiz, 25);
+     *raiz = insere_arvoreB(*raiz, 54);
+     *raiz = insere_arvoreB(*raiz, 56);
 
-    printf("Mostrando em-ordem...\n");
-    em_ordem(*raiz);
-    printf("\n");
+      printf("Mostrando em-ordem...\n");
+      em_ordem(*raiz);
+      printf("\n");
 
-    printf("\nRemovendo elemento 37\n");
-    arvoreB *node;
-    node = busca(*raiz, 37);
+      printf("\nRemovendo elemento 37\n");
+      arvoreB *node;
+      node = busca(*raiz, 37);
 
-    removeBTree((*raiz), node, 37);
-    printf("Mostrando em-ordem...\n");
-    em_ordem(*raiz);
-    printf("\n");
+      removeBTree((*raiz), node, 37);
+      printf("Mostrando em-ordem...\n");
+      em_ordem(*raiz);
+      printf("\n");
 
-    printf("\nRemovendo elemento 58\n");
-    //removeBTree(*raiz,*raiz, 58);
-    printf("Mostrando em-ordem...\n");
-    em_ordem(*raiz);
-    printf("\n");*/
+      printf("\nRemovendo elemento 58\n");
+      //removeBTree(*raiz,*raiz, 58);
+      printf("Mostrando em-ordem...\n");
+      em_ordem(*raiz);
+      printf("\n");*/
 }
 
 void testIsLeaf() {
@@ -734,50 +808,51 @@ void testIsLeaf() {
     if (*raiz) {
         printf("Arvore criada com sucesso!\n");
     } else {
+
         printf("Problema ao alocar arvore!\n");
     }
 
     printf("Inserindo elementos do slide ED2_03_Arvore_B.pdf (pg 36) ...\n");
- /*   *raiz = insere_arvoreB(*raiz, 85);
-    *raiz = insere_arvoreB(*raiz, 60);
-    *raiz = insere_arvoreB(*raiz, 52);
-    *raiz = insere_arvoreB(*raiz, 70);
-    *raiz = insere_arvoreB(*raiz, 58);
-    *raiz = insere_arvoreB(*raiz, 37);
-    *raiz = insere_arvoreB(*raiz, 111);
-    *raiz = insere_arvoreB(*raiz, 23);
-    *raiz = insere_arvoreB(*raiz, 205);
-    *raiz = insere_arvoreB(*raiz, 5);
-    *raiz = insere_arvoreB(*raiz, 97);
-    *raiz = insere_arvoreB(*raiz, 64);
-    *raiz = insere_arvoreB(*raiz, 14);
-    *raiz = insere_arvoreB(*raiz, 90);
-    *raiz = insere_arvoreB(*raiz, 30);
-    *raiz = insere_arvoreB(*raiz, 75);
-    *raiz = insere_arvoreB(*raiz, 25);
-    *raiz = insere_arvoreB(*raiz, 54);
-    *raiz = insere_arvoreB(*raiz, 56);
+    /*   *raiz = insere_arvoreB(*raiz, 85);
+     *raiz = insere_arvoreB(*raiz, 60);
+     *raiz = insere_arvoreB(*raiz, 52);
+     *raiz = insere_arvoreB(*raiz, 70);
+     *raiz = insere_arvoreB(*raiz, 58);
+     *raiz = insere_arvoreB(*raiz, 37);
+     *raiz = insere_arvoreB(*raiz, 111);
+     *raiz = insere_arvoreB(*raiz, 23);
+     *raiz = insere_arvoreB(*raiz, 205);
+     *raiz = insere_arvoreB(*raiz, 5);
+     *raiz = insere_arvoreB(*raiz, 97);
+     *raiz = insere_arvoreB(*raiz, 64);
+     *raiz = insere_arvoreB(*raiz, 14);
+     *raiz = insere_arvoreB(*raiz, 90);
+     *raiz = insere_arvoreB(*raiz, 30);
+     *raiz = insere_arvoreB(*raiz, 75);
+     *raiz = insere_arvoreB(*raiz, 25);
+     *raiz = insere_arvoreB(*raiz, 54);
+     *raiz = insere_arvoreB(*raiz, 56);
 
-    printf("Mostrando em-ordem...\n");
-    em_ordem(*raiz);
-    printf("\n");
+       printf("Mostrando em-ordem...\n");
+       em_ordem(*raiz);
+       printf("\n");
 
-    arvoreB *leaf;
-    leaf = malloc(sizeof (arvoreB));
+       arvoreB *leaf;
+       leaf = malloc(sizeof (arvoreB));
 
-    leaf = busca(*raiz, 54);
-    if (isLeaf(leaf)) {
-        printf("54 eh Leaf\n");
-    } else {
-        printf("54 nao eh Leaf\n");
-    }
+       leaf = busca(*raiz, 54);
+       if (isLeaf(leaf)) {
+           printf("54 eh Leaf\n");
+       } else {
+           printf("54 nao eh Leaf\n");
+       }
 
-    leaf = busca(*raiz, 37);
-    if (isLeaf(leaf)) {
-        printf("37 eh Leaf\n");
-    } else {
-        printf("37 nao eh Leaf\n");
-    }*/
+       leaf = busca(*raiz, 37);
+       if (isLeaf(leaf)) {
+           printf("37 eh Leaf\n");
+       } else {
+           printf("37 nao eh Leaf\n");
+       }*/
 }
 
 void testBTreeAll(void) {

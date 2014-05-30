@@ -93,15 +93,29 @@ int cmpDate(pDATE first, pDATE second)
  **/
 int cmpEncapsulate(pDATA p1, pDATA p2, int typeCmp)
 {
+    
 	DATE date1;
 	DATE date2;
 	int score1;
 	int score2;
 
+        if(p1 == NULL && p2 != NULL){
+            return 1;
+        }
+        
+        if(p2 == NULL && p1 != NULL){
+            return -1;
+        }
+            
 	if(p1 && p2 && typeCmp)
 	{
+            
 		pDATA data1 = (pDATA) p1;
 		pDATA data2 = (pDATA) p2;
+                
+                if(data1->id == 0) return -1;
+                if(data2->id == 0) return -1;
+                
 		int type = typeCmp;
 
 		switch (type){
@@ -127,7 +141,10 @@ int cmpEncapsulate(pDATA p1, pDATA p2, int typeCmp)
 				break;
 		}
 		
-	}
+	}else{
+            return -1;
+        }
+            
 
 }
 

@@ -28,12 +28,16 @@ void menu() {
     srand(time(NULL));
 
     int menu, submenu, status = 0, position, quantity, subsubmenu;
+    int inicio, limit, atual;
+    int ask;
     int size, blockSize = 4096, k_vias = 8, ok = 1;
-    arvoreB **raiz;
+    arvoreB *raiz;
     //Function to sort
     void *cmpFisrt;
     void *cmpSecond;
-    int cmpKey1, cmpKey2;
+    raiz = malloc(sizeof (arvoreB));
+    raiz->num_chaves = 0;
+
 
     // execution time control
     clock_t time_start, time_end;
@@ -52,10 +56,6 @@ void menu() {
 
         switch (menu) {
             case 0:
-
-
-                raiz = malloc(sizeof (arvoreB*));
-                *raiz = malloc(sizeof (arvoreB));
 
                 // Generate BTree and create index
                 printf("\n What is the first key to sort:");
@@ -97,11 +97,11 @@ void menu() {
                 ok = 0;
                 do {
                     // outro menu
-                    printf("\n[1] Generate index table");
+                    printf("\n[1] Generate tree");
                     printf("\n[2] Add entry");
                     printf("\n[3] Remove entry");
-                    printf("\n[4] Refresh index");
-                    printf("\n[5] Lista data by index table");
+                    //printf("\n[4] Refresh index");
+                    printf("\n[5] List");
                     printf("\n[0] Exit");
                     printf("\n");
                     scanf("%d", &menu);
@@ -109,9 +109,10 @@ void menu() {
                     switch (menu) {
                         case 1:
                             time_start = time(NULL);
-                            
+
                             // read entries to tree           
-                            readIndex(&raiz,blockSize);
+                            //readIndex(&raiz,blockSize);
+                            createBTree(&raiz, blockSize);
                             time_end = time(NULL);
                             executionTime(time_start, time_end);
                             break;
@@ -140,6 +141,28 @@ void menu() {
 
                         case 4:
                             // Refresh index file
+                            break;
+
+                        case 5:
+                            inicio = 0;
+                            limit = 5;
+                            atual = 0;
+
+                            do {
+                                em_ordem_paginado(raiz, &atual, &inicio, &limit);
+                                printf("What now?\n");
+                                printf("[0] Next Block\n");
+                                printf("[1] Stop reading ...\n");
+                                scanf("%d", &ask);
+
+                                if (ask == 0) {
+                                    limit = 5;
+                                    inicio += limit;
+                                    atual = 0;
+                                }
+
+                            } while (ask == 0);
+
                             break;
                         case 0:
                             ok = -1;

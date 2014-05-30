@@ -11,6 +11,7 @@
 #define READB		"r"
 
 void openFile(FILE **ppFile, char* param) {
+    
     (*ppFile) = fopen(FULLFILEPATH, param);
     if ((*ppFile) == NULL) {
         fileGenericProblemError();
@@ -124,7 +125,36 @@ void readIndex(arvoreB **raiz, int blockSize) {
 
 }
 
+void createIndex(arvoreB **raiz, int blockSize) {
+    int i;
+    FILE **ppFile;
+    FILE **ppFileData;
+
+    /* //this way will try on-be-one, Using block is more fast */
+    /* //iterate untill it is finished */
+    INDEX_TABLE *indexTable;
+    indexTable = malloc(sizeof(INDEX_TABLE));
+    
+    pDATA pData;
+    pData = malloc(sizeof(DATA));
+    
+    openFileIndexTable(ppFile, "a+b");
+    openFile(ppFileData,"rb");
+    if (raiz) {
+        for(i=0;i<blockSize;i++){
+            fIndexTableReadPosition(ppFile,&indexTable,i);
+            
+            fDataReadPosition(*ppFileData,pData,indexTable->byteIndex);
+            *raiz = insere_arvoreB(*raiz,pData);
+        }
+    }
+    closeFile(ppFile);
+}
+
 void printEntries(pDATA pData) {
+    
+    if(pData == NULL) return;
+    
     printf("ID: %d\n", pData->id);
     /* printf("Show PARTIDA data sieze: %d must be %d  \n",sizeof(pData->partida), sizeof(PARTIDA)); */
     DATA data;
