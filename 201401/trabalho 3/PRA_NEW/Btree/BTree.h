@@ -16,9 +16,20 @@
 
 typedef struct arvoreB arvoreB;
 
+/**Estrutura correspondente a cada nó da Arvore B.
+ */
 typedef struct arvoreB {
+    /**@var num_chaves
+	 * Numero de chaves contidas em um nó.
+         */
     int num_chaves; //Quantidades de chaves contida no nó
+    /**@var chaves
+    	 * Vetor com as chaves armazenadas nesse no.
+    	 */
     pDATA chaves[MAX_CHAVES+1]; //Chaves armazenadas no nó
+    /**@var filhos
+    	 * Ponteiro para os filhos desse no.
+    	 */
     arvoreB *filhos[MAX_FILHOS]; //Ponteiro para os filhos
 } arvoreB;
 
