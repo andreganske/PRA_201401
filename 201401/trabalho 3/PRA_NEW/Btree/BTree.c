@@ -69,7 +69,8 @@ void em_ordem(arvoreB *raiz) {
             em_ordem(raiz->filhos[i]);
 
             //printf(" %d", raiz->chaves[i]);
-            printEntries(raiz->chaves[i]);
+            if (raiz->chaves[i] != NULL && raiz->chaves[i]->id != 0 && raiz->chaves[i]->id > 0)
+                printEntries(raiz->chaves[i]);
         }
         em_ordem(raiz->filhos[i]);
     }
@@ -86,12 +87,12 @@ void em_ordem_paginado(arvoreB *raiz, int *pos_atual, int *inicio, int *limit) {
 
             //printf(" %d", raiz->chaves[i]);
             if (raiz->chaves[i] != NULL && raiz->chaves[i]->id != 0) {//mostra so quando chegou no ponto que quer
-                
-                if(*pos_atual >= *inicio)
+
+                if (*pos_atual >= *inicio)
                     printEntries(raiz->chaves[i]);
-                    *limit -= 1;
-                    *pos_atual += 1;
-            }else{
+                *limit -= 1;
+                *pos_atual += 1;
+            } else {
                 *pos_atual += 1;
             }
         }

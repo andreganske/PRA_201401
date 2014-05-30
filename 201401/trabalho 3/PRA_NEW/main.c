@@ -148,9 +148,10 @@ void menu() {
                             limit = 5;
                             atual = 0;
 
-                            do {
-                                em_ordem_paginado(raiz, &atual, &inicio, &limit);
-                                printf("What now?\n");
+                           // do {
+                                // em_ordem_paginado(raiz, &atual, &inicio, &limit);
+                                em_ordem(raiz);
+                             /*   printf("What now?\n");
                                 printf("[0] Next Block\n");
                                 printf("[1] Stop reading ...\n");
                                 scanf("%d", &ask);
@@ -161,7 +162,7 @@ void menu() {
                                     atual = 0;
                                 }
 
-                            } while (ask == 0);
+                            } while (ask == 0);*/
 
                             break;
                         case 0:
