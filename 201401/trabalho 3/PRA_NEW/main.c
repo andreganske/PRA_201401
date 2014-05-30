@@ -4,6 +4,16 @@
  * Create by Andre Ganske, Deivid Sartori and Wesklei Migliorini
  */
 
+/**
+ * \mainpage Trabalho 3 - Indexação via Árvore B
+ *
+ *
+ * \section objetivo_sec Objetivo
+ *
+ * Contruir um sistema gerador de tabelas auxiliares de indexação de dados, relatórios com os resultados de um campeonato de futebol, atraves do percurso in-order em uma arvoreB
+ *
+ */
+ 
 #include "main.h"
 
 void generateRandomEntriesBlock(int size, int blockSize);
@@ -23,6 +33,8 @@ void main(void) {
     menu();
 }
 
+/**Menu principal do programa.
+ */
 void menu() {
     //to use random values
     srand(time(NULL));
@@ -242,6 +254,8 @@ void menu() {
     } while (status == 1);
 }
 
+/**Gera uma entrada de dados da partida de futebol.
+ */
 void generateOneEntry() {
     FILE** ppFile;
     ppFile = (FILE**) malloc(sizeof (FILE*));
@@ -268,6 +282,8 @@ void generateOneEntry() {
     free(ppFile);
 }
 
+/**Função para caculo do tempo de execução.
+ */
 void executionTime(clock_t time_start, clock_t time_end) {
     double duration;
     // calc time elapsed
@@ -277,6 +293,9 @@ void executionTime(clock_t time_start, clock_t time_end) {
     printf("\n=> This function was running for %.2lf seconds\n", duration);
 }
 
+/**Função para ler os dados de uma partida inserida.
+ * @param position Valor da poisção dos dados da partida desejada.
+ */
 void readEntryPosition(int position) {
     pDATA pData;
     pData = (pDATA) malloc(sizeof (DATA));
@@ -296,6 +315,10 @@ void readEntryPosition(int position) {
     free(ppFile);
 }
 
+/**Função para gerar randomicamente um arquivo, em blocos de dados de partidas de futebol.
+ * @param size Tamanho total de arquivos. 
+ * @param blockSize Tamanho de cada bloco gerado.
+ */
 void generateRandomEntriesBlock(int size, int blockSize) {
     ppPARTIDA ppPartida;
 
@@ -359,6 +382,9 @@ void generateRandomEntriesBlock(int size, int blockSize) {
     free(ppPartida);
 }
 
+/**Função para leitura dos dados gerados, em blocos. 
+ * @param blockSize Tamanho do bloco que sera lido do arquivo gerado. 
+ */
 void readRandomEntriesBlock(int blockSize) {
     ppPARTIDA ppPartida;
 
@@ -408,6 +434,9 @@ void readRandomEntriesBlock(int blockSize) {
     free(ppPartida);
 }
 
+/**Função para leitura dos dados gerados, em blocos. 
+ * @param blockSize Tamanho do bloco que sera lido do arquivo gerado. 
+ */
 void readRandomEntriesBlockSorted(int blockSize) {
     ppPARTIDA ppPartida;
 
