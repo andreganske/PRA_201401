@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="84">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Arquivos de Cabeçalho"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Arquivos de Código-Fonte"
+                   projectFiles="true">
+      <logicalFolder name="f2" displayName="data" projectFiles="true">
+        <logicalFolder name="f1" displayName="file" projectFiles="true">
+          <itemPath>data/file/file_manager.c</itemPath>
+          <itemPath>data/file/file_manager.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="partida" projectFiles="true">
+          <logicalFolder name="f1" displayName="random" projectFiles="true">
+            <itemPath>data/partida/random/random_partida.c</itemPath>
+            <itemPath>data/partida/random/random_partida.h</itemPath>
+          </logicalFolder>
+          <itemPath>data/partida/partida.c</itemPath>
+          <itemPath>data/partida/partida.h</itemPath>
+        </logicalFolder>
+        <itemPath>data/data.c</itemPath>
+        <itemPath>data/data.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="hashtable" projectFiles="true">
+        <itemPath>hashtable/hash.c</itemPath>
+        <itemPath>hashtable/hash.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="utils" projectFiles="true">
+        <itemPath>utils/utils.c</itemPath>
+        <itemPath>utils/utils.h</itemPath>
+      </logicalFolder>
+      <itemPath>main.c</itemPath>
+      <itemPath>main.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Arquivos de Recurso"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Arquivos de Teste"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Arquivos Importantes"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+      </toolsSet>
+      <compileType>
+      </compileType>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+    </conf>
+  </confs>
+</configurationDescriptor>
