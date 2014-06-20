@@ -36,12 +36,13 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/data/data.o \
+	${OBJECTDIR}/data/file/file_manager.o \
 	${OBJECTDIR}/data/partida/partida.o \
 	${OBJECTDIR}/data/partida/random/random_partida.o \
-	${OBJECTDIR}/data/file/file_manager.o \
-	${OBJECTDIR}/utils/utils.o \
 	${OBJECTDIR}/hashtable/hash.o \
-	${OBJECTDIR}/main.o
+	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/testeHash.o \
+	${OBJECTDIR}/utils/utils.o
 
 
 # C Compiler Flags
@@ -66,42 +67,47 @@ LDLIBSOPTIONS=
 
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/trabalho4: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/trabalho4 ${OBJECTFILES} ${LDLIBSOPTIONS} 
+	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/trabalho4 ${OBJECTFILES} ${LDLIBSOPTIONS}
 
 ${OBJECTDIR}/data/data.o: data/data.c 
 	${MKDIR} -p ${OBJECTDIR}/data
-	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/data/data.o data/data.c
-
-${OBJECTDIR}/data/partida/partida.o: data/partida/partida.c 
-	${MKDIR} -p ${OBJECTDIR}/data/partida
-	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/data/partida/partida.o data/partida/partida.c
-
-${OBJECTDIR}/data/partida/random/random_partida.o: data/partida/random/random_partida.c 
-	${MKDIR} -p ${OBJECTDIR}/data/partida/random
-	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/data/partida/random/random_partida.o data/partida/random/random_partida.c
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/data/data.o data/data.c
 
 ${OBJECTDIR}/data/file/file_manager.o: data/file/file_manager.c 
 	${MKDIR} -p ${OBJECTDIR}/data/file
-	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/data/file/file_manager.o data/file/file_manager.c
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/data/file/file_manager.o data/file/file_manager.c
 
-${OBJECTDIR}/utils/utils.o: utils/utils.c 
-	${MKDIR} -p ${OBJECTDIR}/utils
-	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/utils/utils.o utils/utils.c
+${OBJECTDIR}/data/partida/partida.o: data/partida/partida.c 
+	${MKDIR} -p ${OBJECTDIR}/data/partida
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/data/partida/partida.o data/partida/partida.c
+
+${OBJECTDIR}/data/partida/random/random_partida.o: data/partida/random/random_partida.c 
+	${MKDIR} -p ${OBJECTDIR}/data/partida/random
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/data/partida/random/random_partida.o data/partida/random/random_partida.c
 
 ${OBJECTDIR}/hashtable/hash.o: hashtable/hash.c 
 	${MKDIR} -p ${OBJECTDIR}/hashtable
-	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/hashtable/hash.o hashtable/hash.c
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/hashtable/hash.o hashtable/hash.c
 
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.c
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
+
+${OBJECTDIR}/testeHash.o: testeHash.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/testeHash.o testeHash.c
+
+${OBJECTDIR}/utils/utils.o: utils/utils.c 
+	${MKDIR} -p ${OBJECTDIR}/utils
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/utils/utils.o utils/utils.c
 
 # Subprojects
 .build-subprojects:

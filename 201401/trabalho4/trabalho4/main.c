@@ -14,25 +14,19 @@
 indexação de dados para o banco de dados produzido no
 trabalho 1 através de uma tabela de espalhamento.
  */
- 
+
 #include "main.h"
-
-void main(void) {
-    //precisa inicializar no main!
-    cmp = &cmpEncapsulate;
-
-    printf("\nWelcome!");
-    printf("\nWhat you want to do?");
-    //testBTreeAll();
-    menu();
-}
 
 /**Menu principal do programa.
  */
 void menu() {
     //to use random values
     srand(time(NULL));
-    hashpo* table[tam];
+
+    int **hashTable; // vetor que guarda a tabela hash
+    hashTable = malloc(sizeof (int*)); //aloca apenas 1 posicao 
+    *hashTable = malloc(sizeof (int)); //ira usar realloc para guardar o arquivo inteiro
+
     int menu, submenu, status = 0, position, quantity, subsubmenu;
     int inicio, limit, atual;
     int ask;
@@ -52,8 +46,8 @@ void menu() {
         scanf("%d", &menu);
 
         switch (menu) {
-            case 0:  
-                
+            case 0:
+
                 // Criar a tabela a partir das chaves
                 printf("\n What is the first key to sort:");
                 printf("\n[0] Name Time A");
@@ -84,7 +78,7 @@ void menu() {
 
                 time_start = time(NULL);
 
-                
+
                 cmpKey1 = submenu;
                 cmpKey2 = subsubmenu;
                 time_end = time(NULL);
@@ -92,11 +86,10 @@ void menu() {
 
                 ok = 0;
                 do {
-                    
                     printf("\n[1] Gerar tabela hash");
                     printf("\n[2] Adicionar");
                     printf("\n[3] Remover");
-                    printf("\n[4] Atualizar index");//nao implementado
+                    printf("\n[4] Atualizar index"); //nao implementado
                     printf("\n[5] Listar");
                     printf("\n[0] Sair");
                     printf("\n");
@@ -104,13 +97,12 @@ void menu() {
 
                     switch (menu) {
                         case 1:
-                            iniciarhash(table);
                             time_start = time(NULL);
-                            criarhash (table, blockSize);                          
+                            criarhash(hashTable, blockSize);
                             time_end = time(NULL);
                             executionTime(time_start, time_end);
                             break;
-                         /**/
+                            /**/
                         case 2:
                             printf("How much entries you want to create?\n");
                             scanf("%d", &quantity);
@@ -142,29 +134,27 @@ void menu() {
                             limit = 5;
                             atual = 0;
 
-                           // do {
-                                // em_ordem_paginado(raiz, &atual, &inicio, &limit);
-                             //   em_ordem(raiz);
-                                printf("What now?\n");
-                                printf("[0] Next Block\n");
-                                printf("[1] Stop reading ...\n");
-                                scanf("%d", &ask);
+                            // do {
+                            // em_ordem_paginado(raiz, &atual, &inicio, &limit);
+                            //   em_ordem(raiz);
+                            printf("What now?\n");
+                            printf("[0] Next Block\n");
+                            printf("[1] Stop reading ...\n");
+                            scanf("%d", &ask);
 
-                                if (ask == 0) {
-                                    limit = 5;
-                                    inicio += limit;
-                                    atual = 0;
-                                }
+                            if (ask == 0) {
+                                limit = 5;
+                                inicio += limit;
+                                atual = 0;
+                            }
 
-                            } while (ask == 0);
-
-                            break;
                         case 0:
                             ok = -1;
                             break;
-                    
+                    }
+
                 } while (ok == 0);
-                
+
                 break;
 
             case 10:
@@ -191,7 +181,7 @@ void menu() {
                 scanf("%d", &blockSize);
 
                 time_start = time(NULL);
-                generateRandomEntriesBlock(size, blockSize);
+                //generateRandomEntriesBlock(size, blockSize);
                 time_end = time(NULL);
 
                 executionTime(time_start, time_end);
@@ -203,7 +193,7 @@ void menu() {
                 scanf("%d", &blockSize);
 
                 time_start = time(NULL);
-                readRandomEntriesBlock(blockSize);
+                //readRandomEntriesBlock(blockSize);
                 time_end = time(NULL);
 
                 executionTime(time_start, time_end);
@@ -508,4 +498,17 @@ void readRandomEntriesBlockSorted(int blockSize) {
     free(ppData);
     free((*ppPartida));
     free(ppPartida);
+}
+
+void main(void) {
+    //precisa inicializar no main!
+    cmp = &cmpEncapsulate;
+
+    
+    testes_hash();
+    
+    printf("\nWelcome!");
+    //printf("\nWhat you want to do?");
+    //testBTreeAll();
+   // menu();
 }
