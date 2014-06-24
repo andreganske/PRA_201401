@@ -106,3 +106,11 @@ void fileGenericProblemError() {
     perror("\nError operating file!\n");
     exit(1);
 }
+
+void fDataWriteHash(FILE* pFile, pHASH_TABLE pHash) {
+    if (pFile == NULL) {
+        fileGenericProblemError();
+    } else {
+        fwrite(pHash, sizeof (HASH_TABLE), 1, pFile);
+    }
+}

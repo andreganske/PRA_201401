@@ -11,7 +11,6 @@
 #define READB		"r"
 
 void openFile(FILE **ppFile, char* param) {
-    
     (*ppFile) = fopen(FULLFILEPATH, param);
     if ((*ppFile) == NULL) {
         fileGenericProblemError();
@@ -24,6 +23,13 @@ void closeFile(FILE **ppFile) {
 
 void openFileIndexTable(FILE **ppFile, char* param) {
     (*ppFile) = fopen(FULLFILEPATH_INDEX_TABLE, param);
+    if ((*ppFile) == NULL) {
+        fileGenericProblemError();
+    }
+}
+
+void openHashFile(FILE **ppFile, char* param) {
+    (*ppFile) = fopen(HASH_FILEPATH, param);
     if ((*ppFile) == NULL) {
         fileGenericProblemError();
     }

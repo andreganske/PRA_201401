@@ -17,6 +17,8 @@ trabalho 1 através de uma tabela de espalhamento.
 
 #include "main.h"
 
+void teste_hash();
+
 /**Menu principal do programa.
  */
 void menu() {
@@ -98,7 +100,7 @@ void menu() {
                     switch (menu) {
                         case 1:
                             time_start = time(NULL);
-                            criarhash(hashTable, blockSize);
+                            //criarhash(hashTable, blockSize);
                             time_end = time(NULL);
                             executionTime(time_start, time_end);
                             break;
@@ -502,13 +504,58 @@ void readRandomEntriesBlockSorted(int blockSize) {
 
 void main(void) {
     //precisa inicializar no main!
-    cmp = &cmpEncapsulate;
-
-    
-    testes_hash();
     
     printf("\nWelcome!");
     //printf("\nWhat you want to do?");
     //testBTreeAll();
    // menu();
+    
+    teste_hash();
+    
+}
+
+void teste_hash() {
+    int size = 20, i, menu;
+    
+    HashTable *table;
+    table = malloc(sizeof (HashTable));
+    table->numElements = 0;
+    table->sizeOfTable = 0;
+    table->hashTable = malloc(sizeof (Table*));
+    *(table)->hashTable = malloc(sizeof (Table));
+    
+    printf("\niniciando os testes de hash\n");
+    
+    int values[size];
+    
+    printf("gerando %d valores\n", size);
+    for (i = 0; i < size; i++) {
+        values[i] = i;
+    }
+    
+    // criar tabela
+    printf("inserindo itens na tabela\n");
+    insert(size, table, values);
+    
+    // inserir um item
+    printf("inserindo mais um item na tabela\n");
+    insert_hash(table, 23);
+    
+    show_hashlist(table);
+    
+    // remover um item
+    printf("removendo um item\n");
+    remove_hash(15, table);
+    printf("finished\n");
+
+    show_hashlist(table);
+    printf("continue...\n");
+    scanf("%d", &menu);
+            
+    // gerar arquivo
+    printf("gerando arquivo na pasta\n");
+    create_hashfile(table);
+    printf("finished\n");
+    
+    show_hashlist(table);
 }

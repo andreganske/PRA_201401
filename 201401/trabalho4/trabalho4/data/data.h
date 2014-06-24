@@ -24,6 +24,11 @@ typedef enum DataType{
 #define FULLFILEPATH "/tmp/generatedFile.bin"
 
 /**
+ * File path and filename for hash index
+ */
+#define HASH_FILE "hashFile.txt"
+#define HASH_FILEPATH "/tmp/hashFile.txt"
+/**
  * File path and name of index 'table sort'
 */
 #define FILENAME_INDEX_TABLE "indexTableFile.bin"
@@ -45,11 +50,23 @@ typedef struct INDEX_TABLE{
 	unsigned int byteIndex;
 }INDEX_TABLE;
 
+typedef struct HASH_TABLE{
+    unsigned int index;
+    unsigned int byteIndex;
+}HASH_TABLE;
+
+/**
+ * Definitions
+ */
 typedef struct DATA *pDATA;
 typedef struct DATA **ppDATA;
 
 typedef struct INDEX_TABLE *pINDEX_TABLE;
 typedef struct INDEX_TABLE **ppINDEX_TABLE;
+
+typedef struct HASH_TABLE *pHASH_TABLE;
+typedef struct HASH_TABLE **ppHASH_TABLE;
+
 /**
  * Defining functions
  */
@@ -63,6 +80,7 @@ void printEntries(pDATA pData);
 void openFileIndexTable(FILE **ppFile, char* param);
 void readRandomEntriesBlockSorted(int blockSize);
 void intercalateSort(int blockSize, int k_vias, int cmpKey1, int cmpKey2);
+void openHashFile(FILE **ppFile, char* param);
 
 /**
  * Set in second parameter a string representative of DataType

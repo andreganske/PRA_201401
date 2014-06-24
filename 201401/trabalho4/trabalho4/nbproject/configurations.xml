@@ -4,6 +4,13 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Arquivos de Cabeçalho"
                    projectFiles="true">
+      <itemPath>data/data.h</itemPath>
+      <itemPath>data/file/file_manager.h</itemPath>
+      <itemPath>hashtable/hash.h</itemPath>
+      <itemPath>main.h</itemPath>
+      <itemPath>data/partida/partida.h</itemPath>
+      <itemPath>data/partida/random/random_partida.h</itemPath>
+      <itemPath>utils/utils.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Arquivos de Código-Fonte"
@@ -11,30 +18,22 @@
       <logicalFolder name="f2" displayName="data" projectFiles="true">
         <logicalFolder name="f1" displayName="file" projectFiles="true">
           <itemPath>data/file/file_manager.c</itemPath>
-          <itemPath>data/file/file_manager.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="partida" projectFiles="true">
           <logicalFolder name="f1" displayName="random" projectFiles="true">
             <itemPath>data/partida/random/random_partida.c</itemPath>
-            <itemPath>data/partida/random/random_partida.h</itemPath>
           </logicalFolder>
           <itemPath>data/partida/partida.c</itemPath>
-          <itemPath>data/partida/partida.h</itemPath>
         </logicalFolder>
         <itemPath>data/data.c</itemPath>
-        <itemPath>data/data.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="hashtable" projectFiles="true">
         <itemPath>hashtable/hash.c</itemPath>
-        <itemPath>hashtable/hash.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="utils" projectFiles="true">
         <itemPath>utils/utils.c</itemPath>
-        <itemPath>utils/utils.h</itemPath>
       </logicalFolder>
       <itemPath>main.c</itemPath>
-      <itemPath>main.h</itemPath>
-      <itemPath>testeHash.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Arquivos de Recurso"
@@ -92,8 +91,6 @@
       </item>
       <item path="main.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="testeHash.c" ex="false" tool="0" flavor2="0">
-      </item>
       <item path="utils/utils.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="utils/utils.h" ex="false" tool="3" flavor2="0">
@@ -148,8 +145,6 @@
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="main.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="testeHash.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="utils/utils.c" ex="false" tool="0" flavor2="0">
       </item>

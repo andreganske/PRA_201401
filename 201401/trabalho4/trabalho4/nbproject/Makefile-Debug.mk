@@ -41,7 +41,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/data/partida/random/random_partida.o \
 	${OBJECTDIR}/hashtable/hash.o \
 	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/testeHash.o \
 	${OBJECTDIR}/utils/utils.o
 
 
@@ -98,11 +97,6 @@ ${OBJECTDIR}/main.o: main.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/main.o main.c
-
-${OBJECTDIR}/testeHash.o: testeHash.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/testeHash.o testeHash.c
 
 ${OBJECTDIR}/utils/utils.o: utils/utils.c 
 	${MKDIR} -p ${OBJECTDIR}/utils
