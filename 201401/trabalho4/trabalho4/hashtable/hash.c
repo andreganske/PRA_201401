@@ -170,29 +170,45 @@ void show_hashlist (HashTable* table) {
     }
 }
 
+void create_hashtable(HashTable* table, int blockSize) {
+    // load block from file
+    insert(blockSize, table, NULL);
+}
+
 void create_hashfile (HashTable* table) {
     FILE** ppFile;
     ppFile = (FILE**) malloc(sizeof (FILE*));
 
-    int i = 0, j = 0, index = 0;
-    pHASH_TABLE pHash;
-    openHashFile(ppFile, "w+");
+    unsigned i = 0, j = 0, index = 0, size = table->sizeOfTable;
+    openHashFile(ppFile, "wb");
     
-    for (i = 0; i < table->sizeOfTable; i++) {
-
-        pHash->index = index ++;
-        pHash->byteIndex = table->hashTable[i]->key;
-        fDataWriteHash(ppFile, pHash);
-
-        if (table->hashTable[i]->numElements > 0) {
-            for (j = 0; j < table->hashTable[i]->numElements -1; j++) {
-                pHash->index = index ++;
-                pHash->byteIndex = table->hashTable[i]->hashTableColisoes[j];
-                fDataWriteHash(ppFile, pHash);
-            }
-        }   
+    ppHASH_TABLE ppHash = (ppHASH_TABLE) malloc(sizeof (pHASH_TABLE) * size);
+    
+    for (i = 0; i < size; i++) {
+        if (table->hashTable[i]->numElements != 0 && table->hashTable[i]->deleted != 1) {
+            ppHash[index] = (pHASH_TABLE) malloc(sizeof (HASH_TABLE));
+            ppHash[index]->index = index;
+            ppHash[index]->byteIndex = table->hashTable[i]->key;
+            index++;
+        
+            if (table->hashTable[i]->numElements > 0) {
+                for (j = 0; j < table->hashTable[i]->numElements -1; j++) {
+                    ppHash[index] = (pHASH_TABLE) malloc(sizeof (HASH_TABLE));
+                    ppHash[index]->index = index;
+                    ppHash[index]->byteIndex = table->hashTable[i]->hashTableColisoes[j];
+                    index ++;
+                }
+            }   
+        }
     }
     
+    fDataWriteHash(ppFile, ppHash, size);
+    
+    for (i = 0; i < size; i++) {
+        free(ppHash[i]);
+    }
+    
+    free(ppHash);
     closeFile(ppFile);
 }
 

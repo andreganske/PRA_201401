@@ -17,6 +17,7 @@
 #define DESATIVADO 0
 #define SIZE_DIGITOS_HASH 6
 #define SIZE_DIGITOS_UNSIGNED_INT 10
+#define SIZE_BLOCK 4096
 
 typedef struct Table {
     unsigned int numElements;
@@ -33,6 +34,7 @@ typedef struct HashTable {
 unsigned int shortHash(unsigned int x) ;
 unsigned int functionHashInt(unsigned int x);
 
+void create_hashtable(HashTable* table, int blockSize);
 void insert_hash(HashTable* table, unsigned int value);
 void insert (int size, HashTable* table, unsigned int* values);
 Table* busca_hash(unsigned int key, HashTable* table);

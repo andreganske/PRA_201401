@@ -24,6 +24,13 @@ void teste_hash();
 void menu() {
     //to use random values
     srand(time(NULL));
+    
+    HashTable *table;
+    table = malloc(sizeof (HashTable));
+    table->numElements = 0;
+    table->sizeOfTable = 0;
+    table->hashTable = malloc(sizeof (Table*));
+    *(table)->hashTable = malloc(sizeof (Table));
 
     int **hashTable; // vetor que guarda a tabela hash
     hashTable = malloc(sizeof (int*)); //aloca apenas 1 posicao 
@@ -37,7 +44,7 @@ void menu() {
 
     do {
         printf("\n[0] Create HashTable");
-        printf("\n[10] Generate multiple randon entries in file using block");
+        printf("\n[10] Generate multiple random entries in file using block");
         printf("\n[11] Read entry in position using block");
         printf("\n[12] Create and insert one random entry");
         printf("\n[13] Read entry in position");
@@ -80,7 +87,6 @@ void menu() {
 
                 time_start = time(NULL);
 
-
                 cmpKey1 = submenu;
                 cmpKey2 = subsubmenu;
                 time_end = time(NULL);
@@ -88,19 +94,21 @@ void menu() {
 
                 ok = 0;
                 do {
-                    printf("\n[1] Gerar tabela hash");
-                    printf("\n[2] Adicionar");
+                    printf("\n[1] Create hash table");
+                    printf("\n[2] Insert");
                     printf("\n[3] Remover");
-                    printf("\n[4] Atualizar index"); //nao implementado
-                    printf("\n[5] Listar");
-                    printf("\n[0] Sair");
+                    printf("\n[4] Update index"); //nao implementado
+                    printf("\n[5] List");
+                    printf("\n[0] Exit");
                     printf("\n");
                     scanf("%d", &menu);
 
                     switch (menu) {
                         case 1:
                             time_start = time(NULL);
-                            //criarhash(hashTable, blockSize);
+                            
+                            create_hashtable(table, blockSize);
+                            
                             time_end = time(NULL);
                             executionTime(time_start, time_end);
                             break;
@@ -119,9 +127,8 @@ void menu() {
                             printf("What entry will be removed?\n");
                             scanf("%d", &position);
                             time_start = time(NULL);
-
-                            // removeFromBTree
-                            //                        removeFromBTree(int info, cmpKey1, cmpKey2);
+                            
+                            remove_hash(position, table);
 
                             time_end = time(NULL);
                             executionTime(time_start, time_end);
@@ -487,15 +494,10 @@ void readRandomEntriesBlockSorted(int blockSize) {
 
         position++;
     }
-
-
-
-
     closeFile(ppFileIndexTable);
 
     for (i = 0; i < lenght; i++) {
         free(ppData[i]);
-        /* ppData[i]->data = (pPARTIDA) malloc(sizeof(PARTIDA)); */
     }
     free(ppData);
     free((*ppPartida));
@@ -503,15 +505,12 @@ void readRandomEntriesBlockSorted(int blockSize) {
 }
 
 void main(void) {
-    //precisa inicializar no main!
     
     printf("\nWelcome!");
-    //printf("\nWhat you want to do?");
-    //testBTreeAll();
-   // menu();
+    // printf("\nWhat you want to do?");
+    // menu();
     
     teste_hash();
-    
 }
 
 void teste_hash() {
@@ -528,6 +527,13 @@ void teste_hash() {
     
     int values[size];
     
+    /*printf("buscando %d times\n", size);
+    readRandomEntriesBlock(size);
+    
+    // criar tabela
+    printf("inserindo itens na tabela\n");
+    insert(size, table, values);*/
+    
     printf("gerando %d valores\n", size);
     for (i = 0; i < size; i++) {
         values[i] = i;
@@ -536,6 +542,7 @@ void teste_hash() {
     // criar tabela
     printf("inserindo itens na tabela\n");
     insert(size, table, values);
+    
     
     // inserir um item
     printf("inserindo mais um item na tabela\n");

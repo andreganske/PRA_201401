@@ -107,10 +107,10 @@ void fileGenericProblemError() {
     exit(1);
 }
 
-void fDataWriteHash(FILE* pFile, pHASH_TABLE pHash) {
+void fDataWriteHash(FILE* pFile, ppHASH_TABLE ppHash_table, unsigned int size) {
     if (pFile == NULL) {
         fileGenericProblemError();
     } else {
-        fwrite(pHash, sizeof (HASH_TABLE), 1, pFile);
+        fwrite(ppHash_table, (sizeof (HASH_TABLE) * size), 1, pFile);
     }
 }
