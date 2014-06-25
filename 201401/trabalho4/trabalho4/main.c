@@ -17,8 +17,6 @@ trabalho 1 através de uma tabela de espalhamento.
 
 #include "main.h"
 
-void teste_hash();
-
 /**Menu principal do programa.
  */
 void menu() {
@@ -36,10 +34,10 @@ void menu() {
     hashTable = malloc(sizeof (int*)); //aloca apenas 1 posicao 
     *hashTable = malloc(sizeof (int)); //ira usar realloc para guardar o arquivo inteiro
 
-    int menu, submenu, status = 0, position, quantity, subsubmenu;
+    int menu, submenu, status = 0, position, subsubmenu;
     int inicio, limit, atual;
     int ask;
-    int size, blockSize = 4096, k_vias = 8, ok = 1;
+    int size, blockSize = 4096, ok = 1;
     clock_t time_start, time_end;
 
     do {
@@ -48,9 +46,6 @@ void menu() {
         printf("\n[11] Read entry in position using block");
         printf("\n[12] Create and insert one random entry");
         printf("\n[13] Read entry in position");
-        //printf("\n[20] Sort file");
-        // printf("\n[21] Read sorted entries");
-
         printf("\n");
         scanf("%d", &menu);
 
@@ -89,16 +84,16 @@ void menu() {
 
                 cmpKey1 = submenu;
                 cmpKey2 = subsubmenu;
+                
                 time_end = time(NULL);
                 executionTime(time_start, time_end);
 
                 ok = 0;
                 do {
                     printf("\n[1] Create hash table");
-                    printf("\n[2] Insert");
-                    printf("\n[3] Remover");
-                    printf("\n[4] Update index"); //nao implementado
-                    printf("\n[5] List");
+                    printf("\n[2] Remove item");
+                    printf("\n[3] Re-index");
+                    printf("\n[4] List items");
                     printf("\n[0] Exit");
                     printf("\n");
                     scanf("%d", &menu);
@@ -107,45 +102,43 @@ void menu() {
                         case 1:
                             time_start = time(NULL);
                             
-                            create_hashtable(table, blockSize);
+                            // select field to sort and generate
                             
                             time_end = time(NULL);
                             executionTime(time_start, time_end);
                             break;
                             /**/
                         case 2:
-                            printf("How much entries you want to create?\n");
-                            scanf("%d", &quantity);
+                            // remove entry
+                            printf("What entry will be removed?\n");
+                            scanf("%d", &position);
                             time_start = time(NULL);
-                            // create random entries and add
+                            
+                            // remove select item
+                            
                             time_end = time(NULL);
                             executionTime(time_start, time_end);
                             break;
 
                         case 3:
-                            // Remove entry
+                            // re-index
                             printf("What entry will be removed?\n");
                             scanf("%d", &position);
                             time_start = time(NULL);
                             
-                            remove_hash(position, table);
-
+                            // re-index
+                            
                             time_end = time(NULL);
                             executionTime(time_start, time_end);
                             break;
 
                         case 4:
-                            // Refresh index file
-                            break;
-
-                        case 5:
                             inicio = 0;
                             limit = 5;
                             atual = 0;
+                            
+                            // list index table
 
-                            // do {
-                            // em_ordem_paginado(raiz, &atual, &inicio, &limit);
-                            //   em_ordem(raiz);
                             printf("What now?\n");
                             printf("[0] Next Block\n");
                             printf("[1] Stop reading ...\n");
@@ -504,65 +497,73 @@ void readRandomEntriesBlockSorted(int blockSize) {
     free(ppPartida);
 }
 
+/************ hash functions **************************************/
+
+int getIntegerFromChar (char* string, int size) {
+    int i = 0, result = 0;
+    for (i = 0; i < size; i++) {
+        result += (int) string[i];
+    } 
+    return result;
+}
+
+int getDataKey (pDATA pData) {
+    return getIntegerFromChar(pData->partida.nameTimeA, 150) 
+            + getIntegerFromChar(pData->partida.nameTimeB, 150);
+}
+
+unsigned int generateDataHash (pDATA pData) {
+    int key = getDataKey(pData);
+    return functionHashInt(key);
+}
+
+void createIndex(FILE* pFile, HashTable* table, ppDATA ppData, int size) {
+    unsigned int i = 0, key = 0;
+    
+    for (i = 0; i < size; i ++) {
+        // find data position
+        
+        
+        // generate hash
+        key = generateDataHash(ppData[i]);
+        
+        // insert at table
+        insert_hash(table, key);
+    }
+    
+    // print index to file
+    create_hashfile(table);
+}
+
+void removeHash(HashTable* table, pDATA pData) {
+    unsigned int key = getDataKey(pData);
+    
+    // set as removed at hash table
+    remove_hash(key, table);
+    
+    // set as deleted at file
+    
+}
+
+void initHash(FILE* pFile, HashTable* table, int cmpKey1, int cmpKey2) {
+    
+    ppDATA ppData = (ppDATA) malloc(sizeof (pDATA) * 4096);
+    
+    // load data from file
+    
+    // sort by field
+    
+    // create index()
+    createIndex(pFile, table, ppData, 22);
+}
+
+/****************************************************************/
+
 void main(void) {
     
     printf("\nWelcome!");
     // printf("\nWhat you want to do?");
     // menu();
     
-    teste_hash();
-}
-
-void teste_hash() {
-    int size = 20, i, menu;
-    
-    HashTable *table;
-    table = malloc(sizeof (HashTable));
-    table->numElements = 0;
-    table->sizeOfTable = 0;
-    table->hashTable = malloc(sizeof (Table*));
-    *(table)->hashTable = malloc(sizeof (Table));
-    
-    printf("\niniciando os testes de hash\n");
-    
-    int values[size];
-    
-    /*printf("buscando %d times\n", size);
-    readRandomEntriesBlock(size);
-    
-    // criar tabela
-    printf("inserindo itens na tabela\n");
-    insert(size, table, values);*/
-    
-    printf("gerando %d valores\n", size);
-    for (i = 0; i < size; i++) {
-        values[i] = i;
-    }
-    
-    // criar tabela
-    printf("inserindo itens na tabela\n");
-    insert(size, table, values);
-    
-    
-    // inserir um item
-    printf("inserindo mais um item na tabela\n");
-    insert_hash(table, 23);
-    
-    show_hashlist(table);
-    
-    // remover um item
-    printf("removendo um item\n");
-    remove_hash(15, table);
-    printf("finished\n");
-
-    show_hashlist(table);
-    printf("continue...\n");
-    scanf("%d", &menu);
-            
-    // gerar arquivo
-    printf("gerando arquivo na pasta\n");
-    create_hashfile(table);
-    printf("finished\n");
-    
-    show_hashlist(table);
+    //teste_hash();
 }

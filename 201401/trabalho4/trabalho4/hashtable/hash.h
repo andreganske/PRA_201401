@@ -31,6 +31,8 @@ typedef struct HashTable {
     unsigned int sizeOfTable;
     Table **hashTable;
 } HashTable;
+
+
 unsigned int shortHash(unsigned int x) ;
 unsigned int functionHashInt(unsigned int x);
 
@@ -43,6 +45,7 @@ void remove_hash (unsigned int key, HashTable *table);
 // funcoes de exibicao 
 void show_hash(unsigned int key, HashTable* table);
 void show_hashlist (HashTable* table);
+void create_hashfile (HashTable* table);
  
 #endif	/* HASH_H */
 

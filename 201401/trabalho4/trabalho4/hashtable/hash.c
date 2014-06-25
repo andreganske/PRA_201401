@@ -44,7 +44,7 @@ unsigned int functionHashInt(unsigned int x) {
  * @return void
  */
 void insert_hash(HashTable* table, unsigned int value) {
-    unsigned int values[10];
+    unsigned int values[1];
     values[0] = value;
     insert (1, table, values);
 }
@@ -141,7 +141,6 @@ Table* busca_hash(unsigned int key, HashTable* table) {
  * @return void
  */
 void remove_hash (unsigned int key, HashTable* table) {
-    int i;
     Table* hash = busca_hash(key, table);
     hash->deleted = 1;
 }
