@@ -121,15 +121,15 @@ void insert_hashes (HashTable* table, ppDATA ppData, int size) {
  * @param table
  * @return void
  */
-Table* busca_hash(unsigned int key, HashTable* table) {
+int busca_hash(unsigned int key, HashTable* table) {
     unsigned int hashId = functionHashInt(key);
     
     if (table->hashTable[hashId]->key == key) {
         if (table->hashTable[hashId]->deleted == 0) {
-            return table->hashTable[hashId];
+            return table->hashTable[hashId]->key;
         }
     }
-    return NULL;
+    return -1;
 }
 
 /**
@@ -139,8 +139,13 @@ Table* busca_hash(unsigned int key, HashTable* table) {
  * @return void
  */
 void remove_hash (unsigned int key, HashTable* table) {
-    Table* hash = busca_hash(key, table);
-    hash->deleted = 1;
+    unsigned int hashId = functionHashInt(key);
+    
+    if (table->hashTable[hashId]->key == key) {
+        if (table->hashTable[hashId]->deleted == 0) {
+            table->hashTable[hashId]->deleted == 1;
+        }
+    }
 }
    
 /**
@@ -168,11 +173,10 @@ void show_hashlist (HashTable* table) {
 }
 
 void create_hashfile (HashTable* table) {
-    FILE** ppFile;
-    ppFile = (FILE**) malloc(sizeof (FILE*));
+    FILE* file;
 
     unsigned i = 0, j = 0, index = 0, size = table->sizeOfTable;
-    openHashFile(ppFile, "wb");
+    file = fopen(HASH_FILEPATH, "w");
     
     ppHASH_TABLE ppHash = (ppHASH_TABLE) malloc(sizeof (pHASH_TABLE) * size);
     
@@ -194,14 +198,14 @@ void create_hashfile (HashTable* table) {
         }
     }
     
-    fDataWriteHash(ppFile, ppHash, size);
+    fwrite(ppHash, (sizeof (HASH_TABLE) * size), 1, file);
     
     for (i = 0; i < size; i++) {
         free(ppHash[i]);
     }
     
     free(ppHash);
-    closeFile(ppFile);
+    fclose(file);
 }
 
 /**

@@ -121,6 +121,7 @@ void menu() {
                             time_start = time(NULL);
 
                             // remove select item
+                            removeHash(table, position);
 
                             time_end = time(NULL);
                             executionTime(time_start, time_end);
@@ -128,7 +129,7 @@ void menu() {
 
                         case 3:
                             // re-index
-                            printf("What entry will be removed?\n");
+                            printf("Re-indexing\n");
                             scanf("%d", &position);
                             time_start = time(NULL);
 
@@ -144,6 +145,7 @@ void menu() {
                             atual = 0;
 
                             // list index table
+                            show_hashlist(table);
 
                             printf("What now?\n");
                             printf("[0] Next Block\n");
@@ -155,6 +157,7 @@ void menu() {
                                 inicio += limit;
                                 atual = 0;
                             }
+                            break;
 
                         case 0:
                             ok = -1;
@@ -523,18 +526,17 @@ void createIndex(HashTable* table, ppDATA ppData, int size) {
     insert_hashes(table, ppData, size);
 
     // print index to file
-    //create_hashfile(table);
-    //show_hashlist(table);
+    create_hashfile(table);
 }
 
-void removeHash(HashTable* table, pDATA pData) {
-    unsigned int key = pData->id;
-
-    // set as removed at hash table
-    remove_hash(key, table);
+void removeHash(HashTable* table, int position) {
+    int id = busca_hash(position, table);
 
     // set as deleted at file
-
+    setRemoved(id * sizeof(DATA));
+    
+    // set as removed at hash table
+    remove_hash(position, table);
 }
 
 void initHash(HashTable* table, int cmpKey1, int cmpKey2) {

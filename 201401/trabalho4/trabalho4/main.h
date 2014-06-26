@@ -55,6 +55,6 @@ void generateRandomEntriesBlock(int size, int blockSize);
 
 void readRandomEntriesBlock(int blockSize);
 void initHash(HashTable* table, int cmpKey1, int cmpKey2);
-
+void removeHash(HashTable* table, int position);
 
 #endif

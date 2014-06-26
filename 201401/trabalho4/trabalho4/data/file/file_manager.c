@@ -131,10 +131,17 @@ void fileGenericProblemError() {
     exit(1);
 }
 
-void fDataWriteHash(FILE* pFile, ppHASH_TABLE ppHash_table, unsigned int size) {
-    if (pFile == NULL) {
-        fileGenericProblemError();
-    } else {
-        fwrite(ppHash_table, (sizeof (HASH_TABLE) * size), 1, pFile);
-    }
+void setRemoved (int position) {
+    FILE** ppFile;
+    pDATA pData;
+    
+    ppFile = (FILE**) malloc(sizeof (FILE*));
+    pData = malloc(sizeof (DATA));
+    
+    pData->isDeleted = 1;
+    
+    openFile(ppFile, "r+b");
+    
+    fDataOverWrite(*ppFile, pData, position);
+    closeFile(ppFile);
 }

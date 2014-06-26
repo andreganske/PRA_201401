@@ -38,7 +38,7 @@ unsigned int functionHashInt(unsigned int x);
 
 void insert_hash(HashTable* table, ppDATA ppData);
 void insert_hashes (HashTable* table, ppDATA ppData, int size);
-Table* busca_hash(unsigned int key, HashTable* table);
+int busca_hash(unsigned int key, HashTable* table);
 void remove_hash (unsigned int key, HashTable *table);
 
 // funcoes de exibicao 
