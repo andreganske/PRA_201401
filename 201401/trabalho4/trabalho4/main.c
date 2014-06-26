@@ -22,7 +22,7 @@ trabalho 1 através de uma tabela de espalhamento.
 void menu() {
     //to use random values
     srand(time(NULL));
-    
+
     HashTable *table;
     table = malloc(sizeof (HashTable));
     table->numElements = 0;
@@ -54,7 +54,7 @@ void menu() {
             case 9:
                 status = 0;
                 break;
-            
+
             case 0:
 
                 // Criar a tabela a partir das chaves
@@ -89,7 +89,7 @@ void menu() {
 
                 cmpKey1 = submenu;
                 cmpKey2 = subsubmenu;
-                
+
                 time_end = time(NULL);
                 executionTime(time_start, time_end);
 
@@ -106,9 +106,9 @@ void menu() {
                     switch (menu) {
                         case 1:
                             time_start = time(NULL);
-                            
+
                             // select field to sort and generate
-                            
+
                             time_end = time(NULL);
                             executionTime(time_start, time_end);
                             break;
@@ -118,9 +118,9 @@ void menu() {
                             printf("What entry will be removed?\n");
                             scanf("%d", &position);
                             time_start = time(NULL);
-                            
+
                             // remove select item
-                            
+
                             time_end = time(NULL);
                             executionTime(time_start, time_end);
                             break;
@@ -130,9 +130,9 @@ void menu() {
                             printf("What entry will be removed?\n");
                             scanf("%d", &position);
                             time_start = time(NULL);
-                            
+
                             // re-index
-                            
+
                             time_end = time(NULL);
                             executionTime(time_start, time_end);
                             break;
@@ -141,7 +141,7 @@ void menu() {
                             inicio = 0;
                             limit = 5;
                             atual = 0;
-                            
+
                             // list index table
 
                             printf("What now?\n");
@@ -360,15 +360,9 @@ void readEntriesBlock(ppDATA ppData, int blockSize, int position) {
     FILE** ppFile;
     ppFile = (FILE**) malloc(sizeof (FILE*));
     int i = 0;
-    
-    ppData = (ppDATA) malloc(sizeof (pDATA) * blockSize);
-    for (i = 0; i < blockSize; i++) {
-        ppData[i] = (pDATA) malloc(sizeof (DATA));
-    }
-
     openFile(ppFile, "r+b");
-    
-    fDataReadBlock((*ppFile), ppData, blockSize / (sizeof (DATA)), position);
+
+    fDataReadBlock((*ppFile), ppData, blockSize * (sizeof (DATA)), position);
 }
 
 /**Função para leitura dos dados gerados, em blocos. 
@@ -428,7 +422,7 @@ void readAllEntriesBlock(ppDATA ppData) {
     ppFile = (FILE**) malloc(sizeof (FILE*));
 
     openFile(ppFile, "r+b");
-    
+
     fDataReadAll(ppFile, ppData);
 
     closeFile(ppFile);
@@ -513,94 +507,102 @@ void readRandomEntriesBlockSorted(int blockSize) {
 
 /************ hash functions **************************************/
 
-int getIntegerFromChar (char* string, int size) {
+int getIntegerFromChar(char* string, int size) {
     int i = 0, result = 0;
     for (i = 0; i < size; i++) {
         result += (int) string[i];
-    } 
+    }
     return result;
 }
 
 void createIndex(HashTable* table, ppDATA ppData) {
     unsigned int i = 0, size;
-    
-    for (i = 0; i < size; i ++) {
+
+    for (i = 0; i < size; i++) {
         // insert at table
         insert_hash(table, ppData[i]->id);
     }
-    
+
     // print index to file
     create_hashfile(table);
 }
 
 void removeHash(HashTable* table, pDATA pData) {
     unsigned int key = pData->id;
-    
+
     // set as removed at hash table
     remove_hash(key, table);
-    
+
     // set as deleted at file
-    
+
 }
 
 void initHash(HashTable* table, int cmpKey1, int cmpKey2) {
     // load data from file
     ppDATA ppData;
-    
+
     unsigned int block, count;
-    count = (fsize(FULLFILEPATH) / sizeof(DATA)) / SIZE_BLOCK;
-    
+    count = (fsize(FULLFILEPATH) / sizeof (DATA)) / SIZE_BLOCK;
+
     do {
         readRandomEntriesBlock(block);
-        block =- SIZE_BLOCK;
+        block = -SIZE_BLOCK;
     } while (count > 0);
-    
-    
+
+
     // sort by field
-    
-    
+
+
     // create index()
     createIndex(table, ppData);
 }
 
 /****************************************************************/
 
-void teste_leitura () {
+void teste_leitura() {
     ppDATA ppData;
     unsigned int i = 0;
-    
+    int sizeOfAllBytes;
+
     unsigned int count, position = 0, size = fsize(FULLFILEPATH);
-    count = ( size / sizeof(DATA)) / SIZE_BLOCK;
-    
+    sizeOfAllBytes = size / sizeof (DATA);
+    count = sizeOfAllBytes / SIZE_BLOCK;
+
+    ppData = malloc(sizeof (pDATA) * sizeOfAllBytes);
+    for (i = 0; i < sizeOfAllBytes; i++) {
+        ppData[i] = malloc(sizeof (DATA));
+    }
+
     do {
         readEntriesBlock(ppData, SIZE_BLOCK, position);
         position += (SIZE_BLOCK);
         count--;
 
     } while (count > 0);
-    
+
+    i = -1;
     do {
+        i++;
         printEntries(ppData[i]);
-    } while (ppData[i+1]);
+    } while (ppData[i + 1]);
 }
 
-void teste_hash(){
+void teste_hash() {
     ppDATA ppData;
-    
+
     //generateRandomEntriesBlock(4096, 4096);
 }
-
 
 /****************************************************************/
 
 void main(void) {
-    
+
     printf("\nWelcome!");
     // printf("\nWhat you want to do?");
     // menu();
-    
+
     teste_leitura();
-    
+
     //teste_hash();
 
 }
