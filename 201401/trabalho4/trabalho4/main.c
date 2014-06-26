@@ -574,7 +574,8 @@ void teste_leitura () {
     
     do {
         readEntriesBlock(ppData, SIZE_BLOCK, position);
-        position += SIZE_BLOCK * sizeof(DATA);
+        position += (SIZE_BLOCK);
+        count--;
 
     } while (count > 0);
     
