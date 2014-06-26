@@ -23,6 +23,7 @@ void *cmp;
 #include <stdbool.h>
 #include <unistd.h>
 #include <math.h>
+#include <sys/stat.h>
 #include "data/partida/partida.h"
 #include "data/data.h"
 #include "data/partida/random/random_partida.h"

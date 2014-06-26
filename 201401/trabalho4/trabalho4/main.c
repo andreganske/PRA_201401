@@ -356,15 +356,30 @@ void generateRandomEntriesBlock(int size, int blockSize) {
     free(ppPartida);
 }
 
+void readEntriesBlock(ppDATA ppData, int blockSize, int position) {
+    FILE** ppFile;
+    ppFile = (FILE**) malloc(sizeof (FILE*));
+    int i = 0;
+    
+    ppData = (ppDATA) malloc(sizeof (pDATA) * blockSize);
+    for (i = 0; i < blockSize; i++) {
+        ppData[i] = (pDATA) malloc(sizeof (DATA));
+    }
+
+    openFile(ppFile, "r+b");
+    
+    fDataReadBlock((*ppFile), ppData, blockSize / (sizeof (DATA)), position);
+}
+
 /**Função para leitura dos dados gerados, em blocos. 
  * @param blockSize Tamanho do bloco que sera lido do arquivo gerado. 
  */
 void readRandomEntriesBlock(int blockSize) {
     ppPARTIDA ppPartida;
+    ppDATA ppData;
 
     FILE** ppFile;
     ppFile = (FILE**) malloc(sizeof (FILE*));
-    ppDATA ppData;
     int i = 0;
     int ask;
     int position;
@@ -506,11 +521,6 @@ int getIntegerFromChar (char* string, int size) {
     return result;
 }
 
-int getDataKey (pDATA pData) {
-    return getIntegerFromChar(pData->partida.nameTimeA, 150) 
-            + getIntegerFromChar(pData->partida.nameTimeB, 150);
-}
-
 void createIndex(HashTable* table, ppDATA ppData) {
     unsigned int i = 0, size;
     
@@ -524,7 +534,7 @@ void createIndex(HashTable* table, ppDATA ppData) {
 }
 
 void removeHash(HashTable* table, pDATA pData) {
-    unsigned int key = getDataKey(pData);
+    unsigned int key = pData->id;
     
     // set as removed at hash table
     remove_hash(key, table);
@@ -536,11 +546,18 @@ void removeHash(HashTable* table, pDATA pData) {
 void initHash(HashTable* table, int cmpKey1, int cmpKey2) {
     // load data from file
     ppDATA ppData;
-    unsigned int i;
     
-    readAllEntriesBlock(ppData);
+    unsigned int block, count;
+    count = (fsize(FULLFILEPATH) / sizeof(DATA)) / SIZE_BLOCK;
+    
+    do {
+        readRandomEntriesBlock(block);
+        block =- SIZE_BLOCK;
+    } while (count > 0);
+    
     
     // sort by field
+    
     
     // create index()
     createIndex(table, ppData);
@@ -552,11 +569,24 @@ void teste_leitura () {
     ppDATA ppData;
     unsigned int i = 0;
     
-    readAllEntriesBlock(ppData);
+    unsigned int count, position = 0, size = fsize(FULLFILEPATH);
+    count = ( size / sizeof(DATA)) / SIZE_BLOCK;
+    
+    do {
+        readEntriesBlock(ppData, SIZE_BLOCK, position);
+        position += SIZE_BLOCK * sizeof(DATA);
+
+    } while (count > 0);
     
     do {
         printEntries(ppData[i]);
     } while (ppData[i+1]);
+}
+
+void teste_hash(){
+    ppDATA ppData;
+    
+    //generateRandomEntriesBlock(4096, 4096);
 }
 
 
@@ -566,8 +596,10 @@ void main(void) {
     
     printf("\nWelcome!");
     // printf("\nWhat you want to do?");
-     menu();
+    // menu();
     
-    //teste_leitura();
+    teste_leitura();
+    
+    //teste_hash();
 
 }

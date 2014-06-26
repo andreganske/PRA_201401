@@ -47,16 +47,21 @@ void fDataWriteBlock(FILE* pFile, ppDATA ppData, int quanty) {
     }
 }
 
+long fsize(const char* filename) {
+    struct stat st;
+    if (stat(filename, &st) == 0 ) {
+        return st.st_size; 
+    }
+    return -1;
+}
+
 void fDataReadAll(FILE* pFile, ppDATA ppData) {
     if (pFile == NULL) {
         fileGenericProblemError();
     } else {
-
-        fseek(pFile, 0, SEEK_END);
-        unsigned int i, size = (ftell(pFile) / sizeof (DATA));
-        rewind(pFile);
+        unsigned int i, size = (fsize(FULLFILEPATH) / sizeof (DATA));
     
-        ppData = (ppDATA) malloc(size);
+        ppData = (ppDATA) malloc(sizeof (DATA) * size);
         for (i = 0; i < size; i++) {
             ppData[i] = (pDATA) malloc(sizeof (DATA));
         }
