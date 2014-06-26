@@ -108,6 +108,7 @@ void menu() {
                             time_start = time(NULL);
 
                             // select field to sort and generate
+                            initHash(table, cmpKey1, cmpKey2);
 
                             time_end = time(NULL);
                             executionTime(time_start, time_end);
@@ -515,16 +516,15 @@ int getIntegerFromChar(char* string, int size) {
     return result;
 }
 
-void createIndex(HashTable* table, ppDATA ppData) {
-    unsigned int i = 0, size;
+void createIndex(HashTable* table, ppDATA ppData, int size) {
+    unsigned int i = 0;
 
-    for (i = 0; i < size; i++) {
-        // insert at table
-        insert_hash(table, ppData[i]->id);
-    }
+    // insert at table
+    insert_hashes(table, ppData, size);
 
     // print index to file
-    create_hashfile(table);
+    //create_hashfile(table);
+    //show_hashlist(table);
 }
 
 void removeHash(HashTable* table, pDATA pData) {
@@ -538,15 +538,24 @@ void removeHash(HashTable* table, pDATA pData) {
 }
 
 void initHash(HashTable* table, int cmpKey1, int cmpKey2) {
-    // load data from file
     ppDATA ppData;
+    unsigned int i = 0;
+    int sizeOfAllBytes;
 
-    unsigned int block, count;
-    count = (fsize(FULLFILEPATH) / sizeof (DATA)) / SIZE_BLOCK;
+    unsigned int count, position = 0, size = fsize(FULLFILEPATH);
+    sizeOfAllBytes = size / sizeof (DATA);
+    count = sizeOfAllBytes / SIZE_BLOCK;
+
+    ppData = malloc(sizeof (pDATA) * sizeOfAllBytes);
+    for (i = 0; i < sizeOfAllBytes; i++) {
+        ppData[i] = malloc(sizeof (DATA));
+    }
 
     do {
-        readRandomEntriesBlock(block);
-        block = -SIZE_BLOCK;
+        readEntriesBlock(ppData, SIZE_BLOCK, position);
+        position += (SIZE_BLOCK);
+        count--;
+
     } while (count > 0);
 
 
@@ -554,7 +563,7 @@ void initHash(HashTable* table, int cmpKey1, int cmpKey2) {
 
 
     // create index()
-    createIndex(table, ppData);
+    createIndex(table, ppData, sizeOfAllBytes);
 }
 
 /****************************************************************/
@@ -599,9 +608,9 @@ void main(void) {
 
     printf("\nWelcome!");
     // printf("\nWhat you want to do?");
-    // menu();
+    menu();
 
-    teste_leitura();
+    //teste_leitura();
 
     //teste_hash();
 

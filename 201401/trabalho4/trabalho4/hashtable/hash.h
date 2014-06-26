@@ -36,9 +36,8 @@ typedef struct HashTable {
 unsigned int shortHash(unsigned int x) ;
 unsigned int functionHashInt(unsigned int x);
 
-void create_hashtable(HashTable* table, int blockSize);
-void insert_hash(HashTable* table, unsigned int value);
-void insert (int size, HashTable* table, unsigned int* values);
+void insert_hash(HashTable* table, ppDATA ppData);
+void insert_hashes (HashTable* table, ppDATA ppData, int size);
 Table* busca_hash(unsigned int key, HashTable* table);
 void remove_hash (unsigned int key, HashTable *table);
 

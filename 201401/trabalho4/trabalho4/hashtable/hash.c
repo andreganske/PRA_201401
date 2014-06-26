@@ -43,13 +43,11 @@ unsigned int functionHashInt(unsigned int x) {
  * @param valor
  * @return void
  */
-void insert_hash(HashTable* table, unsigned int value) {
-    unsigned int values[1];
-    values[0] = value;
-    insert (1, table, values);
+void insert_hash(HashTable* table, ppDATA ppData) {
+    insert_hashes (table, ppData, 1);
 }
 
-void insert (int size, HashTable* table, unsigned int* values) {
+void insert_hashes (HashTable* table, ppDATA ppData, int size) {
     unsigned int count = 0, hashId = 0, i;
 
     int count_colisao = 0;
@@ -60,7 +58,7 @@ void insert (int size, HashTable* table, unsigned int* values) {
     moreHashes = malloc(sizeof (Table*));
 
     do {
-        hashId = functionHashInt(values[count]);
+        hashId = functionHashInt(ppData[count]->id);
 
         if (hashId > table->sizeOfTable) {
             moreHashes = realloc(table->hashTable, (hashId + 1) * sizeof (Table*));
@@ -91,7 +89,7 @@ void insert (int size, HashTable* table, unsigned int* values) {
 
             if (moreHashesColisoes != NULL) {
                 table->hashTable[hashId]->hashTableColisoes = moreHashesColisoes;
-                table->hashTable[hashId]->hashTableColisoes[numElements - 1] = values[count];
+                table->hashTable[hashId]->hashTableColisoes[numElements - 1] = ppData[count]->id;
                 table->hashTable[hashId]->numElements =  numElements + 1;// numElements;
                 table->numElements += 1;
             } else {
@@ -102,7 +100,7 @@ void insert (int size, HashTable* table, unsigned int* values) {
             }
             count_colisao++;
         } else { //insere sem colisao
-            table->hashTable[hashId]->key = values[count];
+            table->hashTable[hashId]->key = ppData[count]->id;
             table->hashTable[hashId]->numElements += 1;
             table->hashTable[hashId]->deleted = 0;
             table->numElements += 1;
@@ -167,11 +165,6 @@ void show_hashlist (HashTable* table) {
             }
         }
     }
-}
-
-void create_hashtable(HashTable* table, int blockSize) {
-    // load block from file
-    insert(blockSize, table, NULL);
 }
 
 void create_hashfile (HashTable* table) {

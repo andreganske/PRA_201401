@@ -53,5 +53,8 @@ void executionTime(clock_t time_start, clock_t time_end);
 void readEntryPosition(int position);
 void generateRandomEntriesBlock(int size, int blockSize);
 
+void readRandomEntriesBlock(int blockSize);
+void initHash(HashTable* table, int cmpKey1, int cmpKey2);
+
 
 #endif
