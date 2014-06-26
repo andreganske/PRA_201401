@@ -47,6 +47,25 @@ void fDataWriteBlock(FILE* pFile, ppDATA ppData, int quanty) {
     }
 }
 
+void fDataReadAll(FILE* pFile, ppDATA ppData) {
+    if (pFile == NULL) {
+        fileGenericProblemError();
+    } else {
+
+        fseek(pFile, 0, SEEK_END);
+        unsigned int i, size = (ftell(pFile) / sizeof (DATA));
+        rewind(pFile);
+    
+        ppData = (ppDATA) malloc(size);
+        for (i = 0; i < size; i++) {
+            ppData[i] = (pDATA) malloc(sizeof (DATA));
+        }
+        
+        // read all in one block
+        fread((*ppData), size, 1, pFile);
+    } 
+}
+
 void fDataReadBlock(FILE* pFile, ppDATA ppData, int quanty, int position) {
     if (pFile == NULL) {
         fileGenericProblemError();

@@ -34,7 +34,7 @@ void menu() {
     hashTable = malloc(sizeof (int*)); //aloca apenas 1 posicao 
     *hashTable = malloc(sizeof (int)); //ira usar realloc para guardar o arquivo inteiro
 
-    int menu, submenu, status = 0, position, subsubmenu;
+    int menu, submenu, status = 1, position, subsubmenu;
     int inicio, limit, atual;
     int ask;
     int size, blockSize = 4096, ok = 1;
@@ -46,10 +46,15 @@ void menu() {
         printf("\n[11] Read entry in position using block");
         printf("\n[12] Create and insert one random entry");
         printf("\n[13] Read entry in position");
+        printf("\n[9] exit");
         printf("\n");
         scanf("%d", &menu);
 
         switch (menu) {
+            case 9:
+                status = 0;
+                break;
+            
             case 0:
 
                 // Criar a tabela a partir das chaves
@@ -179,11 +184,8 @@ void menu() {
                         break;
                 }
 
-                printf("What is the block size?\n");
-                scanf("%d", &blockSize);
-
                 time_start = time(NULL);
-                //generateRandomEntriesBlock(size, blockSize);
+                generateRandomEntriesBlock(size, blockSize);
                 time_end = time(NULL);
 
                 executionTime(time_start, time_end);
@@ -191,11 +193,8 @@ void menu() {
                 break;
 
             case 11:
-                printf("What is the block size?\n");
-                scanf("%d", &blockSize);
-
                 time_start = time(NULL);
-                //readRandomEntriesBlock(blockSize);
+                readRandomEntriesBlock(blockSize);
                 time_end = time(NULL);
 
                 executionTime(time_start, time_end);
@@ -311,9 +310,9 @@ void generateRandomEntriesBlock(int size, int blockSize) {
     int id = -1;
 
     //* multiply by 2 just to ensure enougth space
-    int lenght = maxSizeBlock;
-    ppData = (ppDATA) malloc(sizeof (pDATA) * lenght);
-    for (i = 0; i < lenght; i++) {
+    int length = maxSizeBlock;
+    ppData = (ppDATA) malloc(sizeof (pDATA) * length);
+    for (i = 0; i < length; i++) {
         ppData[i] = (pDATA) malloc(sizeof (DATA));
         /* ppData[i]->data = (pPARTIDA) malloc(sizeof(PARTIDA)); */
     }
@@ -349,7 +348,7 @@ void generateRandomEntriesBlock(int size, int blockSize) {
     }
     closeFile(ppFile);
 
-    for (i = 0; i < lenght; i++) {
+    for (i = 0; i < length; i++) {
         free(ppData[i]);
     }
     free(ppData);
@@ -370,9 +369,9 @@ void readRandomEntriesBlock(int blockSize) {
     int ask;
     int position;
 
-    int lenght = blockSize;
-    ppData = (ppDATA) malloc(sizeof (pDATA) * lenght);
-    for (i = 0; i < lenght; i++) {
+    int length = blockSize;
+    ppData = (ppDATA) malloc(sizeof (pDATA) * length);
+    for (i = 0; i < length; i++) {
         ppData[i] = (pDATA) malloc(sizeof (DATA));
         /* ppData[i]->data = (pPARTIDA) malloc(sizeof(PARTIDA)); */
     }
@@ -401,12 +400,23 @@ void readRandomEntriesBlock(int blockSize) {
         scanf("%d", &ask);
     } while (ask == 0);
 
-    for (i = 0; i < lenght; i++) {
+    for (i = 0; i < length; i++) {
         free(ppData[i]);
     }
     free(ppData);
     free((*ppPartida));
     free(ppPartida);
+}
+
+void readAllEntriesBlock(ppDATA ppData) {
+    FILE** ppFile;
+    ppFile = (FILE**) malloc(sizeof (FILE*));
+
+    openFile(ppFile, "r+b");
+    
+    fDataReadAll(ppFile, ppData);
+
+    closeFile(ppFile);
 }
 
 /**Função para leitura dos dados gerados, em blocos. 
@@ -427,9 +437,9 @@ void readRandomEntriesBlockSorted(int blockSize) {
     int ask = 0;
     int position, posId;
     //int k_vias = 8;
-    int lenght = blockSize;
-    ppData = (ppDATA) malloc(sizeof (pDATA) * lenght);
-    for (i = 0; i < lenght; i++) {
+    int length = blockSize;
+    ppData = (ppDATA) malloc(sizeof (pDATA) * length);
+    for (i = 0; i < length; i++) {
         ppData[i] = (pDATA) malloc(sizeof (DATA));
         /* ppData[i]->data = (pPARTIDA) malloc(sizeof(PARTIDA)); */
     }
@@ -469,17 +479,6 @@ void readRandomEntriesBlockSorted(int blockSize) {
             }
         }
 
-        /* fDataReadBlock((*ppFile),ppData,blockSize/(sizeof(DATA)), position); */
-
-        /* i=0; */
-        /* while(i<blockSize/sizeof(DATA)) */
-        /* { */
-        /* memcpy((*ppPartida),ppData[i].partida); */
-        /* 	printEntries(ppData[i]); */
-        /* 	i++; */
-        /* } */
-        /* closeFile(ppFile); */
-
         printf("What now?\n");
         printf("[0] Next Block\n");
         printf("[1] Stop reading ...\n");
@@ -489,7 +488,7 @@ void readRandomEntriesBlockSorted(int blockSize) {
     }
     closeFile(ppFileIndexTable);
 
-    for (i = 0; i < lenght; i++) {
+    for (i = 0; i < length; i++) {
         free(ppData[i]);
     }
     free(ppData);
@@ -512,23 +511,12 @@ int getDataKey (pDATA pData) {
             + getIntegerFromChar(pData->partida.nameTimeB, 150);
 }
 
-unsigned int generateDataHash (pDATA pData) {
-    int key = getDataKey(pData);
-    return functionHashInt(key);
-}
-
-void createIndex(FILE* pFile, HashTable* table, ppDATA ppData, int size) {
-    unsigned int i = 0, key = 0;
+void createIndex(HashTable* table, ppDATA ppData) {
+    unsigned int i = 0, size;
     
     for (i = 0; i < size; i ++) {
-        // find data position
-        
-        
-        // generate hash
-        key = generateDataHash(ppData[i]);
-        
         // insert at table
-        insert_hash(table, key);
+        insert_hash(table, ppData[i]->id);
     }
     
     // print index to file
@@ -545,17 +533,32 @@ void removeHash(HashTable* table, pDATA pData) {
     
 }
 
-void initHash(FILE* pFile, HashTable* table, int cmpKey1, int cmpKey2) {
-    
-    ppDATA ppData = (ppDATA) malloc(sizeof (pDATA) * 4096);
-    
+void initHash(HashTable* table, int cmpKey1, int cmpKey2) {
     // load data from file
+    ppDATA ppData;
+    unsigned int i;
+    
+    readAllEntriesBlock(ppData);
     
     // sort by field
     
     // create index()
-    createIndex(pFile, table, ppData, 22);
+    createIndex(table, ppData);
 }
+
+/****************************************************************/
+
+void teste_leitura () {
+    ppDATA ppData;
+    unsigned int i = 0;
+    
+    readAllEntriesBlock(ppData);
+    
+    do {
+        printEntries(ppData[i]);
+    } while (ppData[i+1]);
+}
+
 
 /****************************************************************/
 
@@ -563,7 +566,8 @@ void main(void) {
     
     printf("\nWelcome!");
     // printf("\nWhat you want to do?");
-    // menu();
+     menu();
     
-    //teste_hash();
+    //teste_leitura();
+
 }
